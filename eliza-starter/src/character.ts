@@ -1,9 +1,10 @@
 import { Character, ModelProviderName } from "@elizaos/core";
+import { starknetPlugin } from "@elizaos/plugin-starknet";
 
 export const character: Character = {
     //...defaultCharacter,
     name: "Eliza",
-    plugins: [],
+    plugins: [starknetPlugin],
     clients: [],
     modelProvider: ModelProviderName.TOGETHER,
     settings: {
