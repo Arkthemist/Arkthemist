@@ -12,7 +12,7 @@ import {
     CalculatedBuyAmounts,
     Prices,
 } from "../types/trustDB.ts";
-import { WalletProvider, TokenBalances } from "./portfolioProvider.ts";
+import { WalletProvider, Item } from "./walletProvider.ts";
 import { num } from "starknet";
 import {
     analyzeHighSupplyHolders,
@@ -129,11 +129,11 @@ export class TokenProvider {
     }
 
     // TODO: Update to Starknet
-    async getTokensInWallet(runtime: IAgentRuntime): Promise<TokenBalances[]> {
-        // const walletInfo =
-        //     await this.walletProvider.fetchPortfolioValue(runtime);
-        // const items = walletInfo.items;
-        return [{"0xTokenAddress": BigInt(200)}];
+    async getTokensInWallet(runtime: IAgentRuntime): Promise<Item[]> {
+        const walletInfo =
+             await this.walletProvider.fetchPortfolioValue(runtime);
+        const items = walletInfo.items;
+        return items;
     }
 
     // check if the token symbol is in the wallet
