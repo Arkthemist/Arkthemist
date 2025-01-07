@@ -49,7 +49,7 @@ importers:
         version: 0.1.7(@google-cloud/vertexai@1.9.2)(@langchain/core@0.3.27(openai@4.73.0(zod@3.24.1)))(@types/node@22.10.5)(axios@1.7.9)(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(form-data@4.0.1)(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2)(utf-8-validate@5.0.10))(postcss@8.4.49)(react@19.0.0)(rollup@4.30.0)(sswr@2.1.0(svelte@5.16.2))(svelte@5.16.2)(typescript@5.6.3)(utf-8-validate@5.0.10)(vue@3.5.13(typescript@5.6.3))(whatwg-url@14.1.0)(yaml@2.7.0)(zod@3.24.1)
       '@elizaos/plugin-starknet':
         specifier: file:./plugin-starknet
-        version: file:plugin-starknet(@google-cloud/vertexai@1.9.2)(@langchain/core@0.3.27(openai@4.73.0(zod@3.24.1)))(@types/node@22.10.5)(axios@1.7.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2)(utf-8-validate@5.0.10))(postcss@8.4.49)(qs@6.13.1)(react@19.0.0)(sswr@2.1.0(svelte@5.16.2))(svelte@5.16.2)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))(whatwg-url@14.1.0)(yaml@2.7.0)
+        version: file:plugin-starknet(@google-cloud/vertexai@1.9.2)(@langchain/core@0.3.27(openai@4.73.0(zod@3.24.1)))(@types/node@22.10.5)(axios@1.7.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(get-starknet-core@3.3.4(starknet@6.18.0))(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2)(utf-8-validate@5.0.10))(postcss@8.4.49)(qs@6.13.1)(react@19.0.0)(sswr@2.1.0(svelte@5.16.2))(svelte@5.16.2)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))(whatwg-url@14.1.0)(yaml@2.7.0)
       '@tavily/core':
         specifier: 0.0.2
         version: 0.0.2
@@ -108,12 +108,18 @@ importers:
       '@elizaos/plugin-trustdb':
         specifier: 0.1.7
         version: 0.1.7(@google-cloud/vertexai@1.9.2)(@langchain/core@0.3.27(openai@4.77.3(zod@3.24.1)))(@types/node@22.10.5)(axios@1.7.9)(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2)(utf-8-validate@5.0.10))(postcss@8.4.49)(react@19.0.0)(sswr@2.1.0(svelte@5.16.2))(svelte@5.16.2)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))(whatwg-url@7.1.0)(yaml@2.7.0)
+      '@starknet-react/core':
+        specifier: ^2.9.0
+        version: 2.9.0(get-starknet-core@3.3.4(starknet@6.18.0))(react@19.0.0)(starknet@6.18.0)
       '@uniswap/sdk-core':
         specifier: 6.0.0
         version: 6.0.0
       '@unruggable_starknet/core':
         specifier: 0.1.0
         version: 0.1.0(starknet@6.18.0)
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
       starknet:
         specifier: 6.18.0
         version: 6.18.0
@@ -1236,6 +1242,12 @@ packages:
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
     hasBin: true
 
+  '@module-federation/runtime@0.1.21':
+    resolution: {integrity: sha512-/p4BhZ0SnjJuiL0wwu+FebFgIUJ9vM+oCY7CyprUHImyi/Y23ulI61WNWMVrKQGgdMoXQDQCL8RH4EnrVP2ZFw==}
+
+  '@module-federation/sdk@0.1.21':
+    resolution: {integrity: sha512-r7xPiAm+O4e+8Zvw+8b4ToeD0D0VJD004nHmt+Y8r/l98J2eA6di72Vn1FeyjtQbCrFtiMw3ts/dlqtcmIBipw==}
+
   '@mozilla/readability@0.5.0':
     resolution: {integrity: sha512-Z+CZ3QaosfFaTqvhQsIktyGrjFjSC0Fa4EMph4mqKnWhmyoGICsV/8QK+8HpXut6zV7zwfWwqDmEjtk1Qf6EgQ==}
     engines: {node: '>=14.0.0'}
@@ -2084,8 +2096,26 @@ packages:
   '@starknet-io/types-js@0.7.10':
     resolution: {integrity: sha512-1VtCqX4AHWJlRRSYGSn+4X1mqolI1Tdq62IwzoU2vUuEE72S1OlEeGhpvd6XsdqXcfHmVzYfj8k1XtKBQqwo9w==}
 
+  '@starknet-react/chains@0.1.7':
+    resolution: {integrity: sha512-UNh97I1SvuJKaAhKOmpEk8JcWuZWMlPG/ba2HcvFYL9x/47BKndJ+Da9V+iJFtkHUjreVnajT1snsaz1XMG+UQ==}
+
+  '@starknet-react/core@2.9.0':
+    resolution: {integrity: sha512-UdRo454/g2lb0YsNAUJohJ2w21LlahcEXQlkWrddoKFubRY6Q0b39hec0eZOCqfU0Z1Sh7kF1XYvI5t9xL4yTQ==}
+    peerDependencies:
+      get-starknet-core: ^3.2.0
+      react: ^18.0
+      starknet: ^5.25.0
+
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
+
+  '@tanstack/query-core@5.62.16':
+    resolution: {integrity: sha512-9Sgft7Qavcd+sN0V25xVyo0nfmcZXBuODy3FVG7BMWTg1HMLm8wwG5tNlLlmSic1u7l1v786oavn+STiFaPH2g==}
+
+  '@tanstack/react-query@5.62.16':
+    resolution: {integrity: sha512-XJIZNj65d2IdvU8VBESmrPakfIm6FSdHDzrS1dPrAwmq3ZX+9riMh/ZfbNQHAWnhrgmq7KoXpgZSRyXnqMYT9A==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@tavily/core@0.0.2':
     resolution: {integrity: sha512-UabYbp57bdjEloA4efW9zTSzv+FZp13JVDHcfutUNR5XUZ+aDGupe2wpfABECnD+b7Ojp9v9zguZcm1o+h0//w==}
@@ -3683,6 +3713,11 @@ packages:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
     engines: {node: '>= 0.4'}
 
+  get-starknet-core@3.3.4:
+    resolution: {integrity: sha512-KEnzAMr4f7z7dMh4g5lWDZ+eXtOEl++VPN5Flmmj8HiPmRrPOINEIwwNL/dN+Ey1kBxQOtOMQwCxJ9qlkRIgFw==}
+    peerDependencies:
+      starknet: ^5.18.0
+
   get-stream@5.2.0:
     resolution: {integrity: sha512-nBF+F1rAZVCu/p7rjzgA+Yb4lfYXrpl7a6VmJrU8wF9I1CKvP/QwPNZHnOlwbTkY6dvtFIzFMSyQXbLoTQPRpA==}
     engines: {node: '>=8'}
@@ -3863,6 +3898,9 @@ packages:
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
+
+  immutable@4.3.7:
+    resolution: {integrity: sha512-1hqclzwYwjRDFLjcFxOM5AYkkG0rpFPpr1RLPMEuGczoS7YA8gLhy8SWXYRAA/XwfEHpfo3cw5JGioS32fnMRw==}
 
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
@@ -8190,13 +8228,15 @@ snapshots:
       - yaml
       - zod
 
-  '@elizaos/plugin-starknet@file:plugin-starknet(@google-cloud/vertexai@1.9.2)(@langchain/core@0.3.27(openai@4.73.0(zod@3.24.1)))(@types/node@22.10.5)(axios@1.7.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2)(utf-8-validate@5.0.10))(postcss@8.4.49)(qs@6.13.1)(react@19.0.0)(sswr@2.1.0(svelte@5.16.2))(svelte@5.16.2)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))(whatwg-url@14.1.0)(yaml@2.7.0)':
+  '@elizaos/plugin-starknet@file:plugin-starknet(@google-cloud/vertexai@1.9.2)(@langchain/core@0.3.27(openai@4.73.0(zod@3.24.1)))(@types/node@22.10.5)(axios@1.7.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(get-starknet-core@3.3.4(starknet@6.18.0))(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2)(utf-8-validate@5.0.10))(postcss@8.4.49)(qs@6.13.1)(react@19.0.0)(sswr@2.1.0(svelte@5.16.2))(svelte@5.16.2)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))(whatwg-url@14.1.0)(yaml@2.7.0)':
     dependencies:
       '@avnu/avnu-sdk': 2.1.1(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(qs@6.13.1)(starknet@6.18.0)
       '@elizaos/core': 0.1.7(@google-cloud/vertexai@1.9.2)(@langchain/core@0.3.27(openai@4.73.0(zod@3.24.1)))(axios@1.7.9)(react@19.0.0)(sswr@2.1.0(svelte@5.16.2))(svelte@5.16.2)(vue@3.5.13(typescript@5.6.3))
       '@elizaos/plugin-trustdb': 0.1.7(@google-cloud/vertexai@1.9.2)(@langchain/core@0.3.27(openai@4.73.0(zod@3.24.1)))(@types/node@22.10.5)(axios@1.7.9)(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2)(utf-8-validate@5.0.10))(postcss@8.4.49)(react@19.0.0)(sswr@2.1.0(svelte@5.16.2))(svelte@5.16.2)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))(whatwg-url@14.1.0)(yaml@2.7.0)
+      '@starknet-react/core': 2.9.0(get-starknet-core@3.3.4(starknet@6.18.0))(react@19.0.0)(starknet@6.18.0)
       '@uniswap/sdk-core': 6.0.0
       '@unruggable_starknet/core': 0.1.0(starknet@6.18.0)
+      bignumber.js: 9.1.2
       starknet: 6.18.0
       tsup: 8.3.5(postcss@8.4.49)(typescript@5.6.3)(yaml@2.7.0)
       vitest: 2.1.5(@types/node@22.10.5)(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2)(utf-8-validate@5.0.10))
@@ -8222,6 +8262,7 @@ snapshots:
       - cheerio
       - encoding
       - ethers
+      - get-starknet-core
       - happy-dom
       - jiti
       - jsdom
@@ -8813,6 +8854,12 @@ snapshots:
       - encoding
       - supports-color
     optional: true
+
+  '@module-federation/runtime@0.1.21':
+    dependencies:
+      '@module-federation/sdk': 0.1.21
+
+  '@module-federation/sdk@0.1.21': {}
 
   '@mozilla/readability@0.5.0': {}
 
@@ -9872,9 +9919,29 @@ snapshots:
 
   '@starknet-io/types-js@0.7.10': {}
 
+  '@starknet-react/chains@0.1.7': {}
+
+  '@starknet-react/core@2.9.0(get-starknet-core@3.3.4(starknet@6.18.0))(react@19.0.0)(starknet@6.18.0)':
+    dependencies:
+      '@starknet-react/chains': 0.1.7
+      '@tanstack/react-query': 5.62.16(react@19.0.0)
+      eventemitter3: 5.0.1
+      get-starknet-core: 3.3.4(starknet@6.18.0)
+      immutable: 4.3.7
+      react: 19.0.0
+      starknet: 6.18.0
+      zod: 3.24.1
+
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
+
+  '@tanstack/query-core@5.62.16': {}
+
+  '@tanstack/react-query@5.62.16(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-core': 5.62.16
+      react: 19.0.0
 
   '@tavily/core@0.0.2':
     dependencies:
@@ -11782,6 +11849,11 @@ snapshots:
       dunder-proto: 1.0.1
       es-object-atoms: 1.0.0
 
+  get-starknet-core@3.3.4(starknet@6.18.0):
+    dependencies:
+      '@module-federation/runtime': 0.1.21
+      starknet: 6.18.0
+
   get-stream@5.2.0:
     dependencies:
       pump: 3.0.2
@@ -11999,6 +12071,8 @@ snapshots:
   ieee754@1.2.1: {}
 
   ignore@5.3.2: {}
+
+  immutable@4.3.7: {}
 
   import-fresh@3.3.0:
     dependencies:

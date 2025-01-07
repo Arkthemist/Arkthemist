@@ -31,8 +31,13 @@ Also describe the model that you are going to use in env varible
 XAI_MODEL=meta-llama/Llama-3.3-70B-Instruct-Turbo
 ```
 
-The rest can remain the same.
+Also need to update Starknet related variables
 
+```bash
+STARKNET_ADDRESS=
+STARKNET_PRIVATE_KEY=
+```
+with the data from your own starknet wallet.
 
 ## Install dependencies and start your agent
 
