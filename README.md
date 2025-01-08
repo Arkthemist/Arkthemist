@@ -1,7 +1,6 @@
 # Arkthemist Project
 
-Arkthemist is an innovative platform offering Arbitration as a Service (AaaS). It resolves disputes outside the courtroom 
-by combining AI-driven decisions with blockchain transparency. Our mission is to make arbitration efficient, fair, and secure for everyone.
+Arkthemist is an innovative platform offering Arbitration as a Service (AaaS). It resolves disputes outside the courtroom by combining AI-driven decisions with blockchain transparency. Our mission is to make arbitration efficient, fair, and secure for everyone.
 
 ## Key Features
 
@@ -41,23 +40,23 @@ by combining AI-driven decisions with blockchain transparency. Our mission is to
 ## Deliverables
 
 - AI models fine-tuned with legal datasets.
-- StarkNet plugin for arbitration workflows.
+- Starknet plugin for arbitration workflows.
 - Functional escrow and arbitration contracts in Cairo.
 - User-friendly interface with plugin integrations.
 - End-to-end testing and deployment.
 - Integration of account abstraction for improved onboarding.
 
-## Future Plans
+## Future Ideas
 
-- **Privacy Enhancements**: Implement zero-knowledge proofs for private evidence uploads.
-- **Advanced Computation**: Explore multiparty computation for shared resolution interests.
+- **Privacy Enhancements**: Implement zero-knowledge proofs (ZKPs) for private evidence uploads.
+- **Advanced Computation**: Explore multiparty computation (MPC) for shared resolution interests.
 - **Global Jurisdictional Support**: Expand to more regions with custom-trained models.
-- **Data Transparency**: Provide proofs for AI training data validity.
+- **Data Transparency**: Provide validity proofs for AI training data.
 
 ## Business Model
 
 - **Affordable Arbitration**: Competitive fees (5-10%) compared to traditional services.
-- **Market Potential**: The $15 billion alternative dispute resolution market provides significant opportunities.
+- **Market Potential**: The $82 billion alternative dispute resolution market provides significant opportunities.
 - **Collaborations**: Partnering with legal entities and blockchain projects to expand reach.
 
 ## Why Arkthemist?
