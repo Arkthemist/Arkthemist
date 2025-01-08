@@ -14,6 +14,7 @@ by combining AI-driven decisions with blockchain transparency. Our mission is to
 
 ### Backend
 - **Smart Contracts**: Written in Cairo for StarkNet to enable secure escrow and arbitration processes.
+- **Multi-Agent Framwork**: Built using Eliza to create, deploy, and manage autonomous AI agents.
 
 ### AI
 - **Model Training**: Fine-tuned OpenLlama models using legal datasets.
