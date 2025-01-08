@@ -1,18 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
+import { MouseTrail } from "../components/ui/mouse-trail";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <MouseTrail />
       {/* Navbar remains the same */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-fit bg-card/95 backdrop-blur-sm rounded-full border border-border px-6 py-3 flex items-center gap-8 z-50">
         <div className="flex items-center gap-2">
           <Image
-            src="/logo.svg"
+            src="/favicon.ico"
             alt="Logo"
             width={32}
             height={32}
-            className="dark:invert"
           />
         </div>
         <div className="hidden md:flex items-center gap-8">
