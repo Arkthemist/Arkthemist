@@ -9,7 +9,7 @@ import {
 // import { Connection, PublicKey } from "@solana/web3.js";
 // import { getAssociatedTokenAddress } from "@solana/spl-token";
 // import { TokenProvider } from "./token.ts";
-import { WalletProvider } from "./walletProvider.ts";
+import { WalletProvider } from "./portfolioProvider.ts";
 import {
     TrustScoreDatabase,
     RecommenderMetrics,
@@ -352,9 +352,12 @@ export class TrustScoreManager {
         // TODO: change to starknet
         const wallet = new WalletProvider(runtime);
 
-        const prices = await wallet.fetchPrices(runtime);
-        const solPrice = prices.solana.usd;
-        const buySol = data.buy_amount / parseFloat(solPrice);
+        const prices = await wallet.getTokenUsdValues();
+        const solPrice = prices.solana?.usd;
+        if (!solPrice) {
+            throw new Error("Unable to fetch Solana price (cryptoName: 'solana').");
+        }
+        const buySol = data.buy_amount / solPrice;
         const buy_value_usd = data.buy_amount * processedData.tradeData.market.currentPrice;
 
         const creationData = {
@@ -463,9 +466,12 @@ export class TrustScoreManager {
         // TODO:
         const wallet = new WalletProvider(this.runtime);
 
-        const prices = await wallet.fetchPrices(runtime);
-        const solPrice = prices.solana.usd;
-        const sellSol = sellDetails.sell_amount / parseFloat(solPrice);
+        const prices = await wallet.getTokenUsdValues();
+        const solPrice = prices.solana?.usd;
+        if (!solPrice) {
+            throw new Error("Unable to fetch Solana price (cryptoName: 'solana').");
+        }
+        const sellSol = sellDetails.sell_amount / solPrice;
         const sell_value_usd =
             sellDetails.sell_amount * processedData.tradeData.market.currentPrice;
         const trade = await this.trustScoreDb.getLatestTradePerformance(

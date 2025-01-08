@@ -117,9 +117,6 @@ importers:
       '@unruggable_starknet/core':
         specifier: 0.1.0
         version: 0.1.0(starknet@6.18.0)
-      bignumber.js:
-        specifier: ^9.1.2
-        version: 9.1.2
       starknet:
         specifier: 6.18.0
         version: 6.18.0
@@ -8236,7 +8233,6 @@ snapshots:
       '@starknet-react/core': 2.9.0(get-starknet-core@3.3.4(starknet@6.18.0))(react@19.0.0)(starknet@6.18.0)
       '@uniswap/sdk-core': 6.0.0
       '@unruggable_starknet/core': 0.1.0(starknet@6.18.0)
-      bignumber.js: 9.1.2
       starknet: 6.18.0
       tsup: 8.3.5(postcss@8.4.49)(typescript@5.6.3)(yaml@2.7.0)
       vitest: 2.1.5(@types/node@22.10.5)(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2)(utf-8-validate@5.0.10))
