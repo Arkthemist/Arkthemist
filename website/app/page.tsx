@@ -40,7 +40,7 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
-                href="/dashboard"
+                href="/login"
                 className="px-8 py-3 rounded-full bg-accent text-accent-foreground hover:bg-accent/90 transition-colors text-center"
               >
                 Open App

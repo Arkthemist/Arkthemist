@@ -16,8 +16,7 @@ export function MouseTrail() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const points = useRef<Point[]>([]);
   const mousePosition = useRef({ x: 0, y: 0, prevX: 0, prevY: 0 });
-  const lastTime = useRef(0);
-  const moveTimeout = useRef<NodeJS.Timeout>();
+  const lastTime = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -123,9 +122,6 @@ export function MouseTrail() {
     return () => {
       window.removeEventListener('resize', updateCanvasSize);
       window.removeEventListener('mousemove', handleMouseMove);
-      if (moveTimeout.current) {
-        clearTimeout(moveTimeout.current);
-      }
     };
   }, []);
 
