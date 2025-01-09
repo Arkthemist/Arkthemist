@@ -81,7 +81,9 @@ The winner of the case, which is the party entitled to the money based on your r
 
 Important:
 
-Ensure the decision in the JSON block matches your reasoning in the response. If you indicate that more information is needed, the JSON must set "winner": "unknown".
+Ensure the decision in the JSON block matches your reasoning in the response. If you indicate that more information is needed, or you need any additional details, information, the JSON must set "winner": "unknown".
+
+Be very strict with the laws of Costa Rica and the information provided in the description. If the information is not sufficient to make a decision, set "winner": "unknown".
 
 Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.`;
 
@@ -127,7 +129,7 @@ export const solveCase: Action = {
         elizaLogger.log(JSON.stringify(response, null, 2));
 
         callback?.({
-            text: "Success parsing the case"
+            text: `The winner party is ${response.winner}.`,
         });
 
         return true;
