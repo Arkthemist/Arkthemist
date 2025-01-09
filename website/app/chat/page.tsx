@@ -29,28 +29,74 @@ interface Message {
   timestamp: Date
 }
 
+const ELIZA_API_URL = "http://localhost:3000"
+const AGENT_ID = "138a1128-44dc-02a2-98db-91ee472faa5f"
+
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return
 
-    const newMessage: Message = {
+    const userMessage: Message = {
       id: Date.now().toString(),
       content: inputValue,
       isUser: true,
       timestamp: new Date(),
     }
 
-    setMessages((prev) => [...prev, newMessage])
+    setMessages((prev) => [...prev, userMessage])
     setInputValue("")
-    setTimeout(scrollToBottom, 100)
+    setIsLoading(true)
+
+    try {
+      const response = await fetch(`${ELIZA_API_URL}/${AGENT_ID}/message`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: userMessage.content,
+          userId: "user",
+          userName: "User",
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to send message")
+      }
+
+      const data = await response.json()
+      
+      // Handle each message in the response
+      data.forEach((responseMsg: { text: string }) => {
+        const botMessage: Message = {
+          id: Date.now().toString() + Math.random(),
+          content: responseMsg.text,
+          isUser: false,
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, botMessage])
+      })
+    } catch (error) {
+      console.error("Error sending message:", error)
+      // Optionally add an error message to the chat
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        content: "Sorry, I couldn't process your message. Please try again.",
+        isUser: false,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
+      setTimeout(scrollToBottom, 100)
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -114,8 +160,13 @@ export default function ChatPage() {
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyPress}
                   className="flex-1"
+                  disabled={isLoading}
                 />
-                <Button onClick={handleSendMessage} size="icon">
+                <Button 
+                  onClick={handleSendMessage} 
+                  size="icon"
+                  disabled={isLoading}
+                >
                   <Send className="h-4 w-4" />
                   <span className="sr-only">Send message</span>
                 </Button>
