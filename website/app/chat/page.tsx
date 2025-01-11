@@ -30,7 +30,7 @@ interface Message {
 }
 
 const ELIZA_API_URL = "http://localhost:3000"
-const AGENT_ID = "138a1128-44dc-02a2-98db-91ee472faa5f"
+const AGENT_ID = "a9e6b80b-7aa5-090a-a403-36c9d676c764"
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([])
