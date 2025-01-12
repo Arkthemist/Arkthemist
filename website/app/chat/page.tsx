@@ -1,7 +1,7 @@
 "use client"
 
 import { Send } from "lucide-react"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 
 import { AppSidebar } from "@/components/app-sidebar"
 import {
@@ -31,12 +31,15 @@ interface Message {
 
 const ELIZA_API_URL = "http://localhost:3000"
 const AGENT_ID = "a9e6b80b-7aa5-090a-a403-36c9d676c764"
+//a9e6b80b-7aa5-090a-a403-36c9d676c764
+//old one 138a1128-44dc-02a2-98db-91ee472faa5f
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const roomId = new URLSearchParams(window.location.search).get('roomId') || '1';
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -62,8 +65,10 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: userMessage.content,
-          userId: "user",
+          userId: "1",
+          roomId: roomId,
           userName: "User",
+          unique: true
         }),
       })
 
@@ -72,6 +77,8 @@ export default function ChatPage() {
       }
 
       const data = await response.json()
+
+      console.log('response chat', data)
       
       // Handle each message in the response
       data.forEach((responseMsg: { text: string }) => {
@@ -105,6 +112,41 @@ export default function ChatPage() {
       handleSendMessage()
     }
   }
+
+  // New function to fetch old messages
+  const fetchOldMessages = async () => {
+    try {
+      const response = await fetch(`${ELIZA_API_URL}/${AGENT_ID}/messages`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      })
+
+      console.log('response fetch old', response)
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch old messages")
+      }
+
+      const data = await response.json()
+
+      // Assuming data is an array of messages
+      const oldMessages: Message[] = data.map((msg: { text: string, id: string }) => ({
+        id: msg.id,
+        content: msg.text,
+        isUser: false, // Adjust based on your data structure
+        timestamp: new Date(), // Adjust if you have a timestamp in your data
+      }))
+
+      setMessages(oldMessages)
+    } catch (error) {
+      console.error("Error fetching old messages:", error)
+    }
+  }
+
+  // Fetch old messages when the component mounts
+  useEffect(() => {
+    fetchOldMessages()
+  }, [])
 
   return (
     <SidebarProvider>
