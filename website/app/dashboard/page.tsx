@@ -13,6 +13,12 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { CaseList } from "@/components/case-list"
+import { activeCases } from "@/utils/cases"
+import { MessageCircle, PlusCircle } from "lucide-react"
 
 export default function Page() {
   return (
@@ -27,7 +33,7 @@ export default function Page() {
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="#">
-                    Building Your Application
+                    Dashboard
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
@@ -38,13 +44,50 @@ export default function Page() {
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
+        <div>
+          <div className="min-h-screen bg-gray-950 p-4 space-y-6">
+            {/* Cases Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card className="flex items-center justify-center border border-white/20 bg-gray-950 transition-colors">
+                <div className="w-full p-[10px]">
+                  <h2 className="text-2xl text-white mb-2">Active Cases</h2>
+                  <div className="w-full">
+                    <CaseList cases={activeCases} />
+                  </div>
+                </div>
+              </Card>
+              <Card className="h-32 flex items-center justify-center border border-white/20 bg-gray-950 transition-colors">
+                <h2 className="text-2xl text-white">Resolved Cases</h2>
+              </Card>
+            </div>
+
+            {/* Actions */}
+            <div className="space-y-4">
+              <Button
+                variant="outline"
+                className="w-full h-12 text-base relative group overflow-hidden bg-gradient-to-r from-gray-900/50 to-gray-800/50 border-2 border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-white/5"
+                asChild
+              >
+                <Link href="/cases/new" className="flex items-center justify-center gap-3">
+                  <PlusCircle className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="font-semibold">Create a New Case</span>
+                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Link>
+              </Button>
+
+              <Button
+                variant="outline"
+                className="w-full h-12 text-base relative group overflow-hidden bg-gradient-to-r from-gray-900/50 to-gray-800/50 border-2 border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-white/5"
+                asChild
+              >
+                <Link href="/chat" className="flex items-center justify-center gap-3">
+                  <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="font-semibold">Chat to Get Advice</span>
+                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Link>
+              </Button>
+            </div>
           </div>
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
         </div>
       </SidebarInset>
     </SidebarProvider>
