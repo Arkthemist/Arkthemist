@@ -7,6 +7,7 @@ pub trait IEscrow<TContractState> {
     fn get_order_recipient_address(
         self: @TContractState, order_id: u256, recipient: felt252
     ) -> ContractAddress;
+    fn get_order_state(self: @TContractState, order_id: u256) -> felt252;
     fn create_order(
         ref self: TContractState,
         amount: u256,
@@ -14,7 +15,7 @@ pub trait IEscrow<TContractState> {
         addresses: Array<ContractAddress>
     ) -> u256;
     fn cancel_order(ref self: TContractState, order_id: u256);
-    fn complete_order(ref self: TContractState, order_id: u256);
+    fn complete_order(ref self: TContractState, order_id: u256, winner: felt252);
     fn pay_order(ref self: TContractState, order_id: u256, token_address: ContractAddress);
 }
 
@@ -48,6 +49,10 @@ pub mod Escrow {
             self.orders_addresses.read((order_id, recipient))
         }
 
+        fn get_order_state(self: @ContractState, order_id: u256) -> felt252 {
+            self.order_states.read(order_id)
+        }
+
         fn create_order(
             ref self: ContractState,
             amount: u256,
@@ -77,9 +82,16 @@ pub mod Escrow {
             self.order_states.write(order_id, 'Cancelled');
         }
 
-        fn complete_order(ref self: ContractState, order_id: u256) {
+        fn complete_order(ref self: ContractState, order_id: u256, winner: felt252) {
             let state = self.order_states.read(order_id);
             assert(state == 'Paid', 'Order is not paid');
+
+            let amount = self.orders_amount.read(order_id);
+            let contract_address = get_contract_address();  
+            let winner_address = self.orders_addresses.read((order_id, winner));
+            let result = self.erc20.read().transfer_from(contract_address, winner_address, amount);
+
+            assert(result, 'ERC20_TRANSFER_FAILED');
             self.order_states.write(order_id, 'Completed');
         }
 
