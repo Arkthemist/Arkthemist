@@ -21,6 +21,7 @@ import { DeployData, Factory } from "@unruggable_starknet/core";
 import { AMM, QUOTE_TOKEN_SYMBOL } from "@unruggable_starknet/core/constants";
 import { ACCOUNTS, TOKENS } from "../utils/constants.ts";
 import { validateStarknetConfig } from "../environment.ts";
+import { shortString } from "starknet";
 
 export function convertToDeployData(content: any): DeployData | null {
     const name = content["Token Name"] || content["tokenName"] || content["tokenname"] || content["name"] || content["token_name"];
@@ -68,7 +69,8 @@ Example response:
         "Party A": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "Party B": "0x0000000000000000000000000000000000000000000000000000000000000000"
     },
-    "winner": "Party A"
+    "winner": "Party A",
+    "orderId": 1
 }
 \`\`\`
 
@@ -78,6 +80,7 @@ Analyze the case based on the provided description and reason using Costa Rica l
 
 A dictionary of parties involved, with keys as party names and values as their addresses.
 The winner of the case, which is the party entitled to the money based on your reasoning. If no conclusion can be made due to insufficient information, return "winner": "unknown".
+The orderId number of the case.
 
 Important:
 
@@ -128,11 +131,51 @@ export const solveCase: Action = {
 
         elizaLogger.log(JSON.stringify(response, null, 2));
 
+        if (response.winner === "unknown") {
+            callback?.({
+                text: "More information is needed to make a decision.",
+            });
+            return false;
+        }
+
         callback?.({
-            text: `The winner party is ${response.winner}.`,
+            text: `The winner party is ${response.winner}. Sending funds...`,
         });
 
-        return true;
+        try {
+            const account = getStarknetAccount(runtime);
+
+            let txPayload = [{
+                contractAddress: "0x00f3e069897a4548ca4c664e0466bdafc5276c12f19133a4f8159c8b423e51d8",
+                entrypoint: "complete_order",
+                calldata: ["0x0", response.orderId, shortString.encodeShortString(response.winner)]
+            }];
+
+            const tx = await account.execute(txPayload);
+            elizaLogger.log("Transaction hash is: ", tx);
+
+            callback?.({
+                text:
+                    "Order completed successfully! Deployed in tx: " +
+                    tx.transaction_hash,
+            });
+
+            return true;
+        } catch (error) {
+            elizaLogger.error("Error while completing the order:", error);
+            if (error.baseError.message === "Transaction execution error") {
+                callback?.({
+                    text: 'Transaction execution error: did you pay the order?',
+                    content: { error: 'Transaction execution error: did you pay the order?' },
+                });
+                return false;
+            }
+            callback?.({
+                text: `Error while completing the order: ${error.message}`,
+                content: { error: error.message },
+            });
+            return false;
+        }
     },
     examples: [
         [
