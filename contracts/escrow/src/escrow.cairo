@@ -87,7 +87,7 @@ pub mod Escrow {
             assert(state == 'Paid', 'Order is not paid');
 
             let amount = self.orders_amount.read(order_id);
-            let contract_address = get_contract_address();  
+            let contract_address = get_contract_address();
             let winner_address = self.orders_addresses.read((order_id, winner));
             let result = self.erc20.read().transfer_from(contract_address, winner_address, amount);
 
