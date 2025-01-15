@@ -89,6 +89,8 @@ pub mod Escrow {
             let amount = self.orders_amount.read(order_id);
             let contract_address = get_contract_address();
             let winner_address = self.orders_addresses.read((order_id, winner));
+
+            self.erc20.read().approve(contract_address, amount);
             let result = self.erc20.read().transfer_from(contract_address, winner_address, amount);
 
             assert(result, 'ERC20_TRANSFER_FAILED');
@@ -102,7 +104,8 @@ pub mod Escrow {
             let amount = self.orders_amount.read(order_id);
             let caller = get_caller_address();
             let contract_address = get_contract_address();
-
+            
+            self.erc20.read().approve(contract_address, amount);
             self._validate(caller, token_address, amount);
             let result = self.erc20.read().transfer_from(caller, contract_address, amount);
             assert(result, 'ERC20_TRANSFER_FAILED');
