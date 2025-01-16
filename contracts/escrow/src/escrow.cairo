@@ -16,7 +16,7 @@ pub trait IEscrow<TContractState> {
     ) -> u256;
     fn cancel_order(ref self: TContractState, order_id: u256);
     fn complete_order(ref self: TContractState, order_id: u256, winner: felt252);
-    fn pay_order(ref self: TContractState, order_id: u256, token_address: ContractAddress);
+    fn pay_order(ref self: TContractState, order_id: u256);
 }
 
 #[starknet::contract]
@@ -28,6 +28,12 @@ pub mod Escrow {
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
+    #[constructor]
+    fn constructor(ref self: ContractState, token_address: ContractAddress) {
+        self.erc20.write(IERC20Dispatcher { contract_address: token_address });
+        self.token_address.write(token_address);
+    }
+
     #[storage]
     struct Storage {
         orders: u256,
@@ -35,6 +41,7 @@ pub mod Escrow {
         orders_addresses: Map<(u256, felt252), ContractAddress>,
         order_states: Map<u256, felt252>,
         erc20: IERC20Dispatcher,
+        token_address: ContractAddress,
     }
 
     #[abi(embed_v0)]
@@ -87,27 +94,27 @@ pub mod Escrow {
             assert(state == 'Paid', 'Order is not paid');
 
             let amount = self.orders_amount.read(order_id);
-            let contract_address = get_contract_address();
+            let caller = get_caller_address();
             let winner_address = self.orders_addresses.read((order_id, winner));
 
-            self._approve(contract_address, amount);
-            let result = self.erc20.read().transfer_from(contract_address, winner_address, amount);
+            let dispatcher = IERC20Dispatcher { contract_address: self.token_address.read() };
+
+            let result = dispatcher.transfer_from(caller, winner_address, amount);
 
             assert(result, 'ERC20_TRANSFER_FAILED');
             self.order_states.write(order_id, 'Completed');
         }
 
-        fn pay_order(ref self: ContractState, order_id: u256, token_address: ContractAddress) {
+        fn pay_order(ref self: ContractState, order_id: u256) {
             let state = self.order_states.read(order_id);
             assert(state == 'NotPaid', 'Order is not payable');
 
             let amount = self.orders_amount.read(order_id);
+            let dispatcher = IERC20Dispatcher { contract_address: self.token_address.read() };
+            dispatcher.approve(get_contract_address(), amount);
+
             let caller = get_caller_address();
-            let contract_address = get_contract_address();
-            
-            self._approve(contract_address, amount);
-            self._validate(caller, token_address, amount);
-            let result = self.erc20.read().transfer_from(caller, contract_address, amount);
+            let result = dispatcher.transfer_from(caller, get_contract_address(), amount);
             assert(result, 'ERC20_TRANSFER_FAILED');
 
             self.order_states.write(order_id, 'Paid');
@@ -116,17 +123,11 @@ pub mod Escrow {
 
     #[generate_trait]
     impl Private of PrivateTrait {
-        fn _initialize(ref self: ContractState, token_address: ContractAddress) {
-            self.erc20.write(IERC20Dispatcher { contract_address: token_address });
-        }
-
         fn _validate(
             ref self: ContractState,
             buyer: ContractAddress,
-            token_address: ContractAddress,
             amount: u256
         ) {
-            self._initialize(token_address);
             let buyer_balance = self.erc20.read().balance_of(buyer);
             assert(buyer_balance >= amount, 'ERC20_NOT_SUFFICIENT_AMOUNT');
         }
