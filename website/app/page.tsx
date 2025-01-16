@@ -31,10 +31,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-                AI-Powered Legal Mediation
+                Justice. Redefined.
               </h1>
               <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto">
-                Resolve financial disputes on Starknet with an AI mediator trained in Costa Rican law, ensuring transparent and fair conflict resolution
+                Resolve financial disputes on Starknet with an AI mediator trained with specialized legislation, ensuring transparent and fair conflict resolution
               </p>
             </div>
 
@@ -65,7 +65,7 @@ export default function Home() {
                       <span className="text-2xl font-bold text-accent">1</span>
                     </div>
                     <h3 className="text-xl font-semibold mb-4">Get AI Legal Advice</h3>
-                    <p className="text-muted-foreground">Consult our AI advisor trained in Costa Rican law to understand your case</p>
+                    <p className="text-muted-foreground">Consult our AI advisor trained in relevant law and cases to understand your case</p>
                   </div>
                   <div className="flex flex-col items-center text-center group">
                     <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mb-6 group-hover:bg-accent/30 transition-colors">
