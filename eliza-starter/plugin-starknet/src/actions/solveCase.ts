@@ -148,7 +148,7 @@ export const solveCase: Action = {
             let txPayload = [{
                 contractAddress: "0x00f3e069897a4548ca4c664e0466bdafc5276c12f19133a4f8159c8b423e51d8",
                 entrypoint: "complete_order",
-                calldata: ["0x0", response.orderId, shortString.encodeShortString(response.winner)]
+                calldata: [response.orderId, "0x0", shortString.encodeShortString(response.winner)]
             }];
 
             const tx = await account.execute(txPayload);
