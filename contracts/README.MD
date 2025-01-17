@@ -174,4 +174,4 @@ After deployment, you'll receive a contract address. You can interact with your 
 - [Starkscan Explorer](https://sepolia.starkscan.co/)
 - [Voyager Explorer](https://sepolia.voyager.online/)
 
-Enter your contract address in either explorer to view and interact with your contract. Remmember to switch to Sepolia testnet in the explorer.
+Enter your contract address in either explorer to view and interact with your contract. Remember to switch to Sepolia testnet in the explorer.
