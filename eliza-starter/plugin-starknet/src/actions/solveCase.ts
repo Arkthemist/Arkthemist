@@ -146,9 +146,9 @@ export const solveCase: Action = {
             const account = getStarknetAccount(runtime);
 
             let txPayload = [{
-                contractAddress: "0x00f3e069897a4548ca4c664e0466bdafc5276c12f19133a4f8159c8b423e51d8",
+                contractAddress: "0x07b035dde3e86294d972e1ed8520c39222e72b780ce31202a5497235e2c6b8e3",
                 entrypoint: "complete_order",
-                calldata: ["0x0", response.orderId, shortString.encodeShortString(response.winner)]
+                calldata: [response.orderId, "0x0", shortString.encodeShortString(response.winner)]
             }];
 
             const tx = await account.execute(txPayload);

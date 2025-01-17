@@ -42,7 +42,7 @@ interface LegalCaseFormData {
   evidence: File | null;
 }
 
-const ELIZA_API_URL = "http://localhost:3000"
+const ELIZA_API_URL = process.env.NEXT_PUBLIC_ELIZA_API_URL
 const AGENT_ID = "a9e6b80b-7aa5-090a-a403-36c9d676c764"
 //a9e6b80b-7aa5-090a-a403-36c9d676c764
 
