@@ -1,3 +1,0 @@
-# Arkthemist Project Contracts
-
-In development...
