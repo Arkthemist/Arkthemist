@@ -34,19 +34,25 @@ const AGENT_ID = "a9e6b80b-7aa5-090a-a403-36c9d676c764"
 //a9e6b80b-7aa5-090a-a403-36c9d676c764
 //old one 138a1128-44dc-02a2-98db-91ee472faa5f
 
-export default function ChatPage() {
+interface ChatProps {
+  externalMessages: any
+}
+
+export const Chat = ({ externalMessages }: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [hasRunEffect, setHasRunEffect] = useState(false); // Add a flag state
+
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  // const roomId = new URLSearchParams(window.location.search).get('roomId') || '1';
+  const roomId = new URLSearchParams(window.location.search).get('roomId') || '1';
 
-  const [roomId, setRoomId] = useState('1');
-
-  useEffect(() => {
-    const room = new URLSearchParams(window.location.search).get('roomId') || '1';
-    setRoomId(room);
-  }, []);
+  // useEffect(() => {
+  //   if (!hasRunEffect && externalMessages) {
+  //     setMessages((prev) => [...prev, ...externalMessages]);
+  //     setHasRunEffect(true); // Set the flag to true after running the effect
+  //   }
+  // }, [externalMessages, hasRunEffect]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -85,8 +91,6 @@ export default function ChatPage() {
 
       const data = await response.json()
 
-      console.log('response chat', data)
-      
       // Handle each message in the response
       data.forEach((responseMsg: { text: string }) => {
         const botMessage: Message = {
@@ -120,75 +124,56 @@ export default function ChatPage() {
     }
   }
 
+console.log('messages', messages)
+
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Chat</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <Card className="flex flex-1 flex-col">
-            <div className="flex-1 overflow-y-auto p-4">
-              <div className="flex flex-col gap-4">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${
-                      message.isUser ? "justify-end" : "justify-start"
+    <div className="flex flex-1 flex-col gap-4 pt-0">
+      <Card className="flex flex-1 flex-col">
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex flex-col gap-4">
+            {externalMessages.map((message: any) => {
+              return (
+                <div
+                  key={message.id}
+                  className={`flex ${message.isUser ? "justify-end" : "justify-start"
                     }`}
-                  >
-                    <div
-                      className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                        message.isUser
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted"
-                      }`}
-                    >
-                      {message.content}
-                    </div>
-                  </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
-            </div>
-            <div className="border-t p-4">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Type a message..."
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={handleKeyPress}
-                  className="flex-1"
-                  disabled={isLoading}
-                />
-                <Button 
-                  onClick={handleSendMessage} 
-                  size="icon"
-                  disabled={isLoading}
                 >
-                  <Send className="h-4 w-4" />
-                  <span className="sr-only">Send message</span>
-                </Button>
-              </div>
-            </div>
-          </Card>
+                  <div
+                    className={`max-w-[80%] rounded-lg px-4 py-2 ${message.isUser
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted"
+                      }`}
+                  >
+                    {message.content}
+                  </div>
+                </div>
+              )
+            }
+            )}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+        <div className="border-t p-4">
+          <div className="flex gap-2">
+            <Input
+              placeholder="Type a message..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyPress}
+              className="flex-1"
+              disabled={isLoading}
+            />
+            <Button
+              onClick={handleSendMessage}
+              size="icon"
+              disabled={isLoading}
+            >
+              <Send className="h-4 w-4" />
+              <span className="sr-only">Send message</span>
+            </Button>
+          </div>
+        </div>
+      </Card>
+    </div>
   )
 } 
