@@ -98,7 +98,6 @@ pub mod Escrow {
             let winner_address = self.orders_addresses.read((order_id, winner));
 
             let dispatcher = IERC20Dispatcher { contract_address: self.token_address.read() };
-
             let result = dispatcher.transfer_from(caller, winner_address, amount);
 
             assert(result, 'ERC20_TRANSFER_FAILED');
@@ -130,10 +129,6 @@ pub mod Escrow {
         ) {
             let buyer_balance = self.erc20.read().balance_of(buyer);
             assert(buyer_balance >= amount, 'ERC20_NOT_SUFFICIENT_AMOUNT');
-        }
-
-        fn _approve(ref self: ContractState, spender: ContractAddress, amount: u256) {
-            self.erc20.read().approve(spender, amount);
         }
     }
 }
