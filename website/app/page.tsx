@@ -18,10 +18,7 @@ export default function Home() {
         </div>
         <div className="hidden md:flex items-center gap-8">
           <Link href="#" className="text-sm hover:text-accent transition-colors">Home</Link>
-          <Link href="#" className="text-sm hover:text-accent transition-colors">Features</Link>
-          <Link href="#" className="text-sm hover:text-accent transition-colors">Assets</Link>
-          <Link href="#" className="text-sm hover:text-accent transition-colors">Pricing</Link>
-          <Link href="#" className="text-sm hover:text-accent transition-colors">FAQ</Link>
+          <Link href="/login" className="text-sm hover:text-accent transition-colors">LogIn</Link>
         </div>
       </nav>
 
