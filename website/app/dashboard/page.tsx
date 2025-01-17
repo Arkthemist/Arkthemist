@@ -38,26 +38,26 @@ export default function Page() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>Cases</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
         <div>
-          <div className="min-h-screen bg-gray-950 p-4 space-y-6">
+          <div className="min-h-screen bg-background p-4 space-y-6">
             {/* Cases Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card className="flex items-center justify-center border border-white/20 bg-gray-950 transition-colors">
-                <div className="w-full p-[10px]">
-                  <h2 className="text-2xl text-white mb-2">Active Cases</h2>
+              <Card className="flex items-center justify-center border-border bg-card">
+                <div className="w-full p-6">
+                  <h2 className="text-2xl font-semibold text-foreground mb-4">Active Cases</h2>
                   <div className="w-full">
                     <CaseList cases={activeCases} />
                   </div>
                 </div>
               </Card>
-              <Card className="h-32 flex items-center justify-center border border-white/20 bg-gray-950 transition-colors">
-                <h2 className="text-2xl text-white">Resolved Cases</h2>
+              <Card className="flex items-center justify-center border-border bg-card p-6">
+                <h2 className="text-2xl font-semibold text-foreground">Resolved Cases</h2>
               </Card>
             </div>
 
@@ -65,25 +65,23 @@ export default function Page() {
             <div className="space-y-4">
               <Button
                 variant="outline"
-                className="w-full h-12 text-base relative group overflow-hidden bg-gradient-to-r from-gray-900/50 to-gray-800/50 border-2 border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-white/5"
+                className="w-full h-12 bg-card hover:bg-accent hover:text-accent-foreground transition-colors"
                 asChild
               >
                 <Link href="/cases/new" className="flex items-center justify-center gap-3">
-                  <PlusCircle className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                  <span className="font-semibold">Create a New Case</span>
-                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <PlusCircle className="h-4 w-4" />
+                  <span>Create a New Case</span>
                 </Link>
               </Button>
 
               <Button
                 variant="outline"
-                className="w-full h-12 text-base relative group overflow-hidden bg-gradient-to-r from-gray-900/50 to-gray-800/50 border-2 border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-white/5"
+                className="w-full h-12 bg-card hover:bg-accent hover:text-accent-foreground transition-colors"
                 asChild
               >
                 <Link href="/chat" className="flex items-center justify-center gap-3">
-                  <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                  <span className="font-semibold">Chat to Get Advice</span>
-                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <MessageCircle className="h-4 w-4" />
+                  <span>Chat to Get Advice</span>
                 </Link>
               </Button>
             </div>
