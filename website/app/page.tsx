@@ -18,10 +18,7 @@ export default function Home() {
         </div>
         <div className="hidden md:flex items-center gap-8">
           <Link href="#" className="text-sm hover:text-accent transition-colors">Home</Link>
-          <Link href="#" className="text-sm hover:text-accent transition-colors">Features</Link>
-          <Link href="#" className="text-sm hover:text-accent transition-colors">Assets</Link>
-          <Link href="#" className="text-sm hover:text-accent transition-colors">Pricing</Link>
-          <Link href="#" className="text-sm hover:text-accent transition-colors">FAQ</Link>
+          <Link href="/login" className="text-sm hover:text-accent transition-colors">LogIn</Link>
         </div>
       </nav>
 
@@ -87,88 +84,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="rounded-3xl bg-gradient-to-tr from-card via-card/50 to-accent/[0.12] border border-border backdrop-blur-sm p-8 md:p-12 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-tr from-background/30 to-transparent"></div>
-              <div className="relative">
-                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Features</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <div className="group p-6 rounded-2xl bg-gradient-to-tr from-card/90 via-card/70 to-accent/[0.08] border border-border hover:border-accent transition-all hover:shadow-[0_0_1rem_-0.25rem_theme(colors.accent.DEFAULT)] duration-300">
-                    <div className="h-48 rounded-xl bg-gradient-to-tr from-secondary/80 to-secondary/30 mb-4 overflow-hidden relative">
-                      {/* Feature image */}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">Secure Assets</h3>
-                    <p className="text-muted-foreground">Protect your digital assets with state-of-the-art blockchain technology</p>
-                  </div>
-                  <div className="group p-6 rounded-2xl bg-gradient-to-tr from-card/90 via-card/70 to-accent/[0.08] border border-border hover:border-accent transition-all hover:shadow-[0_0_1rem_-0.25rem_theme(colors.accent.DEFAULT)] duration-300">
-                    <div className="h-48 rounded-xl bg-gradient-to-tr from-secondary/80 to-secondary/30 mb-4 overflow-hidden relative">
-                      {/* Feature image */}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">Smart Trading</h3>
-                    <p className="text-muted-foreground">Advanced trading features with real-time market insights</p>
-                  </div>
-                  <div className="group p-6 rounded-2xl bg-gradient-to-tr from-card/90 via-card/70 to-accent/[0.08] border border-border hover:border-accent transition-all hover:shadow-[0_0_1rem_-0.25rem_theme(colors.accent.DEFAULT)] duration-300">
-                    <div className="h-48 rounded-xl bg-gradient-to-tr from-secondary/80 to-secondary/30 mb-4 overflow-hidden relative">
-                      {/* Feature image */}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">DeFi Integration</h3>
-                    <p className="text-muted-foreground">Seamless integration with leading DeFi protocols</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Use Cases Section */}
-        <section className="px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="rounded-3xl bg-gradient-to-tr from-card via-card/50 to-accent/[0.12] border border-border backdrop-blur-sm p-8 md:p-12 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-tr from-background/30 to-transparent"></div>
-              <div className="relative">
-                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Use Cases</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="p-8 rounded-2xl bg-gradient-to-tr from-card/90 via-card/70 to-accent/[0.08] border border-border hover:border-accent transition-all hover:shadow-[0_0_1rem_-0.25rem_theme(colors.accent.DEFAULT)] duration-300">
-                    <h3 className="text-2xl font-semibold mb-4">Individual Investors</h3>
-                    <ul className="space-y-3 text-muted-foreground">
-                      <li className="flex items-center gap-2">
-                        <span className="text-accent">•</span>
-                        Protect personal digital assets
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="text-accent">•</span>
-                        Monitor portfolio performance
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="text-accent">•</span>
-                        Automated trading strategies
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="p-8 rounded-2xl bg-gradient-to-tr from-card/90 via-card/70 to-accent/[0.08] border border-border hover:border-accent transition-all hover:shadow-[0_0_1rem_-0.25rem_theme(colors.accent.DEFAULT)] duration-300">
-                    <h3 className="text-2xl font-semibold mb-4">Institutions</h3>
-                    <ul className="space-y-3 text-muted-foreground">
-                      <li className="flex items-center gap-2">
-                        <span className="text-accent">•</span>
-                        Enterprise-grade security
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="text-accent">•</span>
-                        Multi-signature protection
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="text-accent">•</span>
-                        Compliance and reporting
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
     </div>
   );
