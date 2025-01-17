@@ -1,8 +1,6 @@
 "use client"
 
-import { Send } from "lucide-react"
-import { useRef, useState, useEffect } from "react"
-import { ChangeEvent, FormEvent } from "react"
+import { useRef, useState } from "react"
 import { AppSidebar } from "@/components/app-sidebar"
 import {
   Breadcrumb,
@@ -21,11 +19,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Upload } from 'lucide-react'
-import supabase from "@/lib/supabaseClient"; // Adjust the path as necessary
 
 interface Message {
   id: string
@@ -90,11 +83,6 @@ export default function ActiveCasesPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-
-                  
-
-
-                
                 </CardContent>
               </Card>
             </div>

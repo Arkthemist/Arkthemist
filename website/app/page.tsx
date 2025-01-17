@@ -34,7 +34,7 @@ export default function Home() {
                 Justice. Redefined.
               </h1>
               <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto">
-                Dive into the art assets, where innovative blockchain technology meets financial expertise
+                Solve your conflicts without going to court
               </p>
             </div>
 
@@ -71,15 +71,15 @@ export default function Home() {
                     <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mb-6 group-hover:bg-accent/30 transition-colors">
                       <span className="text-2xl font-bold text-accent">2</span>
                     </div>
-                    <h3 className="text-xl font-semibold mb-4">Select Assets</h3>
-                    <p className="text-muted-foreground">Choose from a wide range of digital assets to protect</p>
+                    <h3 className="text-xl font-semibold mb-4">Create a case</h3>
+                    <p className="text-muted-foreground">Submit your issue and let the AI fix it</p>
                   </div>
                   <div className="flex flex-col items-center text-center group">
                     <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mb-6 group-hover:bg-accent/30 transition-colors">
                       <span className="text-2xl font-bold text-accent">3</span>
                     </div>
-                    <h3 className="text-xl font-semibold mb-4">Secure Protection</h3>
-                    <p className="text-muted-foreground">Enjoy automated protection and monitoring of your assets</p>
+                    <h3 className="text-xl font-semibold mb-4">Secure Resolution</h3>
+                    <p className="text-muted-foreground">Let the AI manage your conflicts</p>
                   </div>
                 </div>
               </div>
