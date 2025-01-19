@@ -60,6 +60,11 @@ COPY --from=builder /app/plugin-starknet/dist /app/plugin-starknet/dist
 COPY --from=builder /app/tsconfig.json /app/
 COPY --from=builder /app/pnpm-lock.yaml /app/
 
+# Add health check to prevent starting services prematurely
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD curl -f http://localhost:3000/health || exit 1
+
+# Expose application port
 EXPOSE 3000
+
 # Set the command to run the application
 CMD ["pnpm", "start", "--non-interactive"]
