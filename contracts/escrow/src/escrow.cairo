@@ -94,11 +94,10 @@ pub mod Escrow {
             assert(state == 'Paid', 'Order is not paid');
 
             let amount = self.orders_amount.read(order_id);
-            let caller = get_caller_address();
             let winner_address = self.orders_addresses.read((order_id, winner));
 
             let dispatcher = IERC20Dispatcher { contract_address: self.token_address.read() };
-            let result = dispatcher.transfer_from(caller, winner_address, amount);
+            let result = dispatcher.transfer(winner_address, amount);
 
             assert(result, 'ERC20_TRANSFER_FAILED');
             self.order_states.write(order_id, 'Completed');
@@ -110,9 +109,10 @@ pub mod Escrow {
 
             let amount = self.orders_amount.read(order_id);
             let dispatcher = IERC20Dispatcher { contract_address: self.token_address.read() };
-            dispatcher.approve(get_contract_address(), amount);
 
             let caller = get_caller_address();
+            self._validate(caller, amount);
+
             let result = dispatcher.transfer_from(caller, get_contract_address(), amount);
             assert(result, 'ERC20_TRANSFER_FAILED');
 
