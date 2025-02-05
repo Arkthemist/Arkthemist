@@ -27,8 +27,8 @@ COPY ./plugin-starknet ./plugin-starknet
 RUN cd ./plugin-starknet && pnpm i && pnpm build
 
 # Install dependencies and build the project
-RUN pnpm install --frozen-lockfile
-RUN pnpm build 
+RUN pnpm install
+RUN pnpm build
 
 # Create dist directory and set permissions
 RUN mkdir -p /app/dist && \
