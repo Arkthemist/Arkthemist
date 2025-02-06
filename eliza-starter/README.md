@@ -21,6 +21,7 @@ cp .env.examples .env
 ```
 
 Get an api token in together ai platform and paste on env variable
+
 ```bash
 OPENAI_API_KEY=<secret_token>
 ```
@@ -37,6 +38,7 @@ Also need to update Starknet related variables
 STARKNET_ADDRESS=
 STARKNET_PRIVATE_KEY=
 ```
+
 with the data from your own starknet wallet.
 
 ## Install dependencies and start your agent
@@ -44,7 +46,9 @@ with the data from your own starknet wallet.
 ```bash
 pnpm i && pnpm start
 ```
+
 Note: this requires node to be at least version 22 when you install packages and run the agent.
 
 ## Test the agent
+
 You can communicate with it using postman or using the pre build client of eliza (download eliza directly and follow build instructions and finally run pnpm start:client)
