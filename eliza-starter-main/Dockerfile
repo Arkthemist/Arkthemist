@@ -31,7 +31,7 @@ RUN pnpm build
 
 WORKDIR /app
 RUN pnpm install 
-RUN pnpm build 
+RUN pnpm build || (echo "Build failed with exit code $?"; cat pnpm-debug.log; exit 1)
 
 # Create dist directory and set permissions
 RUN mkdir -p /app/dist && \
