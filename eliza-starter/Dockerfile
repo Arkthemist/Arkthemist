@@ -49,9 +49,6 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-# Ensure the database path is inside the mounted volume
-VOLUME ["/app/data"]
-
 # Copy built artifacts and production dependencies from the builder stage
 COPY --from=builder /app/package.json /app/
 COPY --from=builder /app/node_modules /app/node_modules
