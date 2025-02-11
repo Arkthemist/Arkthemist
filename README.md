@@ -12,14 +12,17 @@ Arkthemist is an innovative platform offering Arbitration as a Service (AaaS). I
 ## Tech Stack
 
 ### Backend
+
 - **Smart Contracts**: Written in Cairo for StarkNet to enable secure escrow and arbitration processes.
 - **Multi-Agent Framwork**: Built using Eliza to create, deploy, and manage autonomous AI agents.
 
 ### AI
+
 - **Model Training**: Fine-tuned OpenLlama models using legal datasets.
 - **Pre-Trained Modules**: Support for different jurisdictions and arbitration scenarios.
 
 ### Frontend
+
 - **User Interfaces**: Integrated with StarkNet plugins for ease of use.
 - **Role-Based Access**: Features for arbitrators and participants.
 - **Account Abstraction**: Simplifies onboarding for non-crypto-native users.

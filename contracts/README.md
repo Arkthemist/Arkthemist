@@ -19,46 +19,46 @@ The contract uses OpenZeppelin's ERC20 implementation and provides functionality
 
 1. `get_order_amount(order_id: u256) -> u256`
 
-   - Returns the amount of tokens associated with a specific order
+    - Returns the amount of tokens associated with a specific order
 
 2. `get_order_recipient_address(order_id: u256, recipient: felt252) -> ContractAddress`
 
-   - Returns the address of a specific recipient for a given order
+    - Returns the address of a specific recipient for a given order
 
 3. `get_order_state(order_id: u256) -> felt252`
 
-   - Returns the current state of an order
-   - Possible states: 'NotPaid', 'Paid', 'Completed', 'Cancelled'
+    - Returns the current state of an order
+    - Possible states: 'NotPaid', 'Paid', 'Completed', 'Cancelled'
 
 #### Transaction Functions
 
 1. `create_order(amount: u256, recipients: Array<felt252>, addresses: Array<ContractAddress>) -> u256`
 
-   - Creates a new order with specified amount and recipients
-   - Returns the newly created order ID
-   - Validates that recipients and addresses arrays have the same length
+    - Creates a new order with specified amount and recipients
+    - Returns the newly created order ID
+    - Validates that recipients and addresses arrays have the same length
 
 2. `cancel_order(order_id: u256)`
 
-   - Cancels an existing order
-   - Sets the order state to 'Cancelled'
+    - Cancels an existing order
+    - Sets the order state to 'Cancelled'
 
 3. `complete_order(order_id: u256, winner: felt252)`
 
-   - Completes an order by transferring tokens to the winner
-   - Requires the order to be in 'Paid' state
-   - Transfers the specified amount to the winner's address
+    - Completes an order by transferring tokens to the winner
+    - Requires the order to be in 'Paid' state
+    - Transfers the specified amount to the winner's address
 
 4. `pay_order(order_id: u256)`
-   - Processes payment for an order
-   - Requires the order to be in 'NotPaid' state
-   - Transfers tokens from the caller to the contract
+    - Processes payment for an order
+    - Requires the order to be in 'NotPaid' state
+    - Transfers tokens from the caller to the contract
 
 ### Internal Functions
 
 1. `_validate(buyer: ContractAddress, amount: u256)`
-   - Internal function to validate buyer's token balance
-   - Ensures the buyer has sufficient tokens for the transaction
+    - Internal function to validate buyer's token balance
+    - Ensures the buyer has sufficient tokens for the transaction
 
 ### Dependencies
 
