@@ -26,6 +26,7 @@
         "@unruggable_starknet/core": "0.1.0",
         "starknet": "6.18.0",
         "tsup": "8.3.5",
+        "typescript": "^5.7.3",
         "unruggable-sdk": "1.4.0",
         "vitest": "2.1.9"
     },
