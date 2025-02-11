@@ -24,9 +24,8 @@ COPY ./src ./src
 COPY ./characters ./characters
 COPY ./plugin-starknet ./plugin-starknet
 
-RUN cd ./plugin-starknet && pnpm i && pnpm build
-
 # Install dependencies and build the project
+RUN cd plugin-starknet && pnpm install && pnpm build
 RUN pnpm install
 RUN pnpm build
 
