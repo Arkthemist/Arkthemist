@@ -27,11 +27,11 @@ COPY ./plugin-starknet ./plugin-starknet
 # Install dependencies and build the project
 WORKDIR /app/plugin-starknet
 RUN pnpm install
-RUN pnpm build
+RUN pnpm build || (echo "Build failed with exit code $?"; cat pnpm-debug.log; exit 1)
 
 WORKDIR /app
 RUN pnpm install 
-RUN pnpm build || (echo "Build failed with exit code $?"; cat pnpm-debug.log; exit 1)
+RUN pnpm build
 
 # Create dist directory and set permissions
 RUN mkdir -p /app/dist && \
