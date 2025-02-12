@@ -24,11 +24,13 @@
         "@elizaos/plugin-trustdb": "0.1.9",
         "@uniswap/sdk-core": "6.0.0",
         "@unruggable_starknet/core": "0.1.0",
+        "node-cache": "^5.1.2",
         "starknet": "6.18.0",
         "tsup": "8.3.5",
         "typescript": "^5.7.3",
         "unruggable-sdk": "1.4.0",
-        "vitest": "2.1.9"
+        "vitest": "2.1.9",
+        "zod": "^3.24.2"
     },
     "devDependencies": {
         "@biomejs/biome": "1.5.3"
