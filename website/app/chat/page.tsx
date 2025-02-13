@@ -41,11 +41,11 @@ export default function ChatPage() {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	// const roomId = new URLSearchParams(window.location.search).get('roomId') || '1';
 
-	const [roomId, setRoomId] = useState("1");
+	const [roomId, setRoomId] = useState("2");
 
 	useEffect(() => {
 		const room =
-			new URLSearchParams(window.location.search).get("roomId") || "1";
+			new URLSearchParams(window.location.search).get("roomId") || "2";
 		setRoomId(room);
 	}, []);
 
