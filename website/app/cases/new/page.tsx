@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from "react";
 import { ChangeEvent, FormEvent } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -30,6 +31,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Chat } from "@/app/components/Chat";
 import { PaymentModal } from "@/app/components/PaymentModal";
+import { v4 as uuidv4 } from 'uuid';
 
 interface Message {
 	id: string;
@@ -39,7 +41,7 @@ interface Message {
 }
 
 interface LegalCaseFormData {
-	caseTitle: string;
+	title: string;
 	yourAddress: string;
 	defendantAddress: string;
 	claim: string;
@@ -53,6 +55,7 @@ const AGENT_ID = "a9e6b80b-7aa5-090a-a403-36c9d676c764";
 //a9e6b80b-7aa5-090a-a403-36c9d676c764
 
 export default function NewCasePage() {
+	const router = useRouter();
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -68,7 +71,7 @@ export default function NewCasePage() {
 	};
 
 	const [formData, setFormData] = useState<LegalCaseFormData>({
-		caseTitle: "",
+		title: "",
 		yourAddress: "",
 		defendantAddress: "",
 		claim: "",
@@ -94,13 +97,13 @@ export default function NewCasePage() {
 		// Create a prompt with the form data
 		const promptMessage = `
       solve_case, orderId: 6, issue description: tenant A, which has address ${formData.yourAddress}, is demanding tenant B, which has address: ${formData.defendantAddress}
-      Case Title: ${formData.caseTitle}
+      Case Title: ${formData.title}
       Issue description: ${formData.claim}
       Amount: ${formData.amount}
     `;
 
 		setCaseInfo({
-			title: formData.caseTitle,
+			title: formData.title,
 			partyA: formData.yourAddress,
 			partyB: formData.defendantAddress,
 			amount: formData.amount,
@@ -119,7 +122,7 @@ export default function NewCasePage() {
 		console.log("Prompt message:", promptMessage);
 
 		// Create a variable to store the room ID
-		const roomId = "asdasd123"; // Store the current room ID
+		const roomId = uuidv4(); // Generate a unique room ID
 
 		// Send the prompt message to the API
 		try {
@@ -140,6 +143,24 @@ export default function NewCasePage() {
 
 			if (!response.ok) {
 				throw new Error("Failed to send prompt message");
+			}
+
+			// New fetch request to '/api/cases'
+			const caseResponse = await fetch('/api/cases', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					title: formData.title ?? '',
+					description: formData.claim ?? '',
+					userId: '1',
+					roomId: roomId ?? ''
+				}),
+			});
+
+			if (!caseResponse.ok) {
+				throw new Error("Failed to send case data");
 			}
 
 			const data = await response.json();
@@ -200,8 +221,8 @@ export default function NewCasePage() {
 												Create new case
 											</h1>
 											<Input
-												name="caseTitle"
-												value={formData.caseTitle}
+												name="title"
+												value={formData.title}
 												onChange={handleInputChange}
 												placeholder="Write Case Title"
 												className="text-xl bg-zinc-800/50 border-zinc-700 placeholder:text-zinc-400"
@@ -322,10 +343,10 @@ export default function NewCasePage() {
 					{hasSubmitted && (
 						<Chat
 							externalMessages={messages}
-							// onSendMessage={(message) => {
-							//   console.log('message', message)
-							// }}
-							//   messages={messages}
+						// onSendMessage={(message) => {
+						//   console.log('message', message)
+						// }}
+						//   messages={messages}
 						/>
 					)}
 				</div>
