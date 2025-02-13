@@ -1,11 +1,11 @@
-import { Character, ModelProviderName } from "@elizaos/core";
+import { Character, ModelProviderName, Clients } from "@elizaos/core";
 import { starknetPlugin } from "@elizaos/plugin-starknet";
 
 export const character: Character = {
 	//...defaultCharacter,
 	name: "Eliza Legal",
 	plugins: [starknetPlugin],
-	clients: [],
+	clients: [Clients.TWITTER],
 	modelProvider: ModelProviderName.GAIANET,
 	settings: {
 		secrets: {},
