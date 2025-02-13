@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MouseTrail } from "../components/ui/mouse-trail";
+import Footer from "./components/Footer";
 
 export default function Home() {
 	return (
@@ -24,15 +25,15 @@ export default function Home() {
 						Home
 					</Link>
 					<Link
-						href="/login"
+						href="/dashboard"
 						className="text-sm hover:text-accent transition-colors"
 					>
-						LogIn
+						Chat
 					</Link>
 				</div>
 			</nav>
 
-			<main className="flex flex-col gap-32 pb-32">
+			<main className="flex flex-col gap-32">
 				{/* Hero Section */}
 				<section className="pt-48 px-4">
 					<div className="max-w-7xl mx-auto">
@@ -50,14 +51,14 @@ export default function Home() {
 
 						<div className="flex flex-col sm:flex-row gap-4 justify-center">
 							<Link
-								href="/login"
+								href="/dashboard"
 								className="px-8 py-3 rounded-full bg-accent text-accent-foreground hover:bg-accent/90 transition-colors text-center"
 							>
 								Open App
 							</Link>
-							<button className="px-8 py-3 rounded-full bg-card/50 backdrop-blur-sm border border-border hover:bg-secondary transition-colors">
+							<a href="#features" className="px-8 py-3 rounded-full bg-card/50 backdrop-blur-sm border border-border hover:bg-secondary transition-colors">
 								Discover More
-							</button>
+							</a>
 						</div>
 					</div>
 				</section>
@@ -129,13 +130,18 @@ export default function Home() {
 						<div className="rounded-3xl bg-gradient-to-tr from-card via-card/50 to-accent/[0.12] border border-border backdrop-blur-sm p-8 md:p-12 relative overflow-hidden">
 							<div className="absolute inset-0 bg-gradient-to-tr from-background/30 to-transparent"></div>
 							<div className="relative">
-								<h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+								<h2 className="text-3xl md:text-4xl font-bold mb-12 text-center" id="features">
 									Features
 								</h2>
 								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 									<div className="group p-6 rounded-2xl bg-gradient-to-tr from-card/90 via-card/70 to-accent/[0.08] border border-border hover:border-accent transition-all hover:shadow-[0_0_1rem_-0.25rem_theme(colors.accent.DEFAULT)] duration-300">
 										<div className="h-48 rounded-xl bg-gradient-to-tr from-secondary/80 to-secondary/30 mb-4 overflow-hidden relative">
 											{/* Feature image */}
+											<img
+												src="/feature1.webp"
+												alt="Features"
+												className="w-full h-full object-cover"
+											/>
 										</div>
 										<h3 className="text-xl font-semibold mb-2">
 											Legal AI Expertise
@@ -148,6 +154,11 @@ export default function Home() {
 									<div className="group p-6 rounded-2xl bg-gradient-to-tr from-card/90 via-card/70 to-accent/[0.08] border border-border hover:border-accent transition-all hover:shadow-[0_0_1rem_-0.25rem_theme(colors.accent.DEFAULT)] duration-300">
 										<div className="h-48 rounded-xl bg-gradient-to-tr from-secondary/80 to-secondary/30 mb-4 overflow-hidden relative">
 											{/* Feature image */}
+											<img
+												src="/feature2.webp"
+												alt="Features"
+												className="w-full h-full object-cover"
+											/>
 										</div>
 										<h3 className="text-xl font-semibold mb-2">
 											Blockchain Security
@@ -160,6 +171,11 @@ export default function Home() {
 									<div className="group p-6 rounded-2xl bg-gradient-to-tr from-card/90 via-card/70 to-accent/[0.08] border border-border hover:border-accent transition-all hover:shadow-[0_0_1rem_-0.25rem_theme(colors.accent.DEFAULT)] duration-300">
 										<div className="h-48 rounded-xl bg-gradient-to-tr from-secondary/80 to-secondary/30 mb-4 overflow-hidden relative">
 											{/* Feature image */}
+											<img
+												src="/feature3.webp"
+												alt="Features"
+												className="w-full h-full object-cover"
+											/>
 										</div>
 										<h3 className="text-xl font-semibold mb-2">
 											Automated Resolution
@@ -240,7 +256,19 @@ export default function Home() {
 						</div>
 					</div>
 				</section>
+
+				<section className="px-4">
+					<div className="max-w-7xl mx-auto">
+						<img
+							src="/team.png"
+							alt="Features"
+							className="w-full h-full object-cover"
+						/>
+					</div>
+				</section>
+
+				<Footer />
 			</main>
-		</div>
+		</div >
 	);
 }
