@@ -94,11 +94,10 @@ pub mod Escrow {
             assert(state == 'Paid', 'Order is not paid');
 
             let amount = self.orders_amount.read(order_id);
-            let caller = get_caller_address();
             let winner_address = self.orders_addresses.read((order_id, winner));
 
             let dispatcher = IERC20Dispatcher { contract_address: self.token_address.read() };
-            let result = dispatcher.transfer_from(caller, winner_address, amount);
+            let result = dispatcher.transfer(winner_address, amount);
 
             assert(result, 'ERC20_TRANSFER_FAILED');
             self.order_states.write(order_id, 'Completed');
@@ -122,11 +121,7 @@ pub mod Escrow {
 
     #[generate_trait]
     impl Private of PrivateTrait {
-        fn _validate(
-            ref self: ContractState,
-            buyer: ContractAddress,
-            amount: u256
-        ) {
+        fn _validate(ref self: ContractState, buyer: ContractAddress, amount: u256) {
             let buyer_balance = self.erc20.read().balance_of(buyer);
             assert(buyer_balance >= amount, 'ERC20_NOT_SUFFICIENT_AMOUNT');
         }
