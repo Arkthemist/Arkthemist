@@ -1,44 +1,51 @@
-import { Case } from "@/types/case";
+export async function getAllCases() {
+	try {
+		const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'; // Use environment variable or default
+		const response = await fetch(`${baseUrl}/api/cases`, {
+			cache: 'no-store',
+		});
 
-export const activeCases: Case[] = [
-	{
-		id: "1",
-		title: "Scam Case",
-		status: "active",
-		dateCreated: "2025-01-11",
-		priority: "high",
-		roomId: "6fa8055f-4f5a-48b5-89b5-4e8a07dade2a",
-	},
-	{
-		id: "2",
-		title: "Employment Dispute",
-		status: "active",
-		dateCreated: "2025-01-10",
-		priority: "medium",
-		roomId: "00cf82a3-37f2-4969-b5c4-d9a9c4ca90db",
-	},
-	{
-		id: "3",
-		title: "Property Agreement",
-		status: "active",
-		dateCreated: "2025-01-09",
-		priority: "low",
-		roomId: "933dd399-138e-4dcf-aa8a-371698943ea1",
-	},
-	{
-		id: "4",
-		title: "Intellectual Property Case",
-		status: "active",
-		dateCreated: "2025-01-08",
-		priority: "high",
-		roomId: "6453fea2-90b3-4a80-b030-0587c7104c81",
-	},
-	{
-		id: "5",
-		title: "Intellectual Property Case",
-		status: "active",
-		dateCreated: "2025-01-08",
-		priority: "high",
-		roomId: "c7b0b0ee-b2cb-42db-9ef5-b8b83e45c4e3",
-	},
-];
+		if (!response.ok) {
+			throw new Error('Failed to fetch cases');
+		}
+
+		return response.json();
+	} catch (error) {
+		console.error('Error fetching all cases:', error);
+		return [];
+	}
+}
+
+export async function getCaseByRoomId(roomId: string) {
+	try {
+		const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'; // Use environment variable or default
+		const response = await fetch(`${baseUrl}/api/case-by-roomId/${roomId}`);
+
+		if (!response.ok) {
+			throw new Error('Failed to fetch case by roomId');
+		}
+
+		return response.json();
+	} catch (error) {
+		console.error('Error fetching case by roomId:', error);
+		return null;
+	}
+}
+
+export async function getCaseById(id: string) {
+	try {
+		const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001';
+		const response = await fetch(`${baseUrl}/api/cases/${id}`, {
+			cache: 'no-store',
+		});
+
+		if (!response.ok) {
+			throw new Error('Failed to fetch case');
+		}
+
+		return response.json();
+	} catch (error) {
+		console.error('Error fetching case:', error);
+		return null;
+	}
+}

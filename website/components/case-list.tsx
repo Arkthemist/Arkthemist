@@ -21,7 +21,7 @@ export function CaseList({ cases }: CaseListProps) {
 								<h3 className="font-medium text-white">
 									{case_.title}
 								</h3>
-								<Badge
+								{/* <Badge
 									variant="outline"
 									className={
 										case_.priority === "high"
@@ -32,14 +32,16 @@ export function CaseList({ cases }: CaseListProps) {
 									}
 								>
 									{case_.priority}
-								</Badge>
+								</Badge> */}
 							</div>
-							<p className="text-sm text-zinc-400 mt-1">
-								Created:{" "}
-								{new Date(
-									case_.dateCreated,
-								).toLocaleDateString()}
-							</p>
+							{case_.createdAt && (
+								<p className="text-sm text-zinc-400 mt-1">
+									Created:{" "}
+									{new Date(
+										case_.createdAt,
+									).toLocaleDateString()}
+								</p>
+							)}
 						</Link>
 					</div>
 				))}
