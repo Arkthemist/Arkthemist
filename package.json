@@ -4,5 +4,9 @@
 	},
 	"scripts": {
 		"fmt": "prettier --write ."
+	},
+	"dependencies": {
+		"jotai": "^2.12.0",
+		"starknetkit": "^2.6.1"
 	}
 }

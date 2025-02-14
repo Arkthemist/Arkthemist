@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MouseTrail } from "../components/ui/mouse-trail";
 import Footer from "./components/Footer";
+import WalletConnector from "@/components/ui/connectWallet";
 
 export default function Home() {
 	return (
@@ -30,6 +31,7 @@ export default function Home() {
 					>
 						Chat
 					</Link>
+					<WalletConnector />
 				</div>
 			</nav>
 
