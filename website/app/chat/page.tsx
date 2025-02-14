@@ -13,7 +13,7 @@ import {
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -21,6 +21,7 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { getCaseByRoomId } from "@/utils/cases";
 
 interface Message {
 	id: string;
@@ -42,11 +43,30 @@ export default function ChatPage() {
 	// const roomId = new URLSearchParams(window.location.search).get('roomId') || '1';
 
 	const [roomId, setRoomId] = useState("2");
+	const [caseInfo, setCaseInfo] = useState<any>(null);
+	const [hasSubmitted, setHasSubmitted] = useState(false);
+
+	console.log('caseInfo', caseInfo)
 
 	useEffect(() => {
 		const room =
 			new URLSearchParams(window.location.search).get("roomId") || "2";
 		setRoomId(room);
+
+		// Fetch case information based on roomId
+		const fetchCaseInfo = async () => {
+			try {
+				const data = await getCaseByRoomId(room);
+				if (data) {
+					setCaseInfo(data[0]);
+					setHasSubmitted(true);
+				}
+			} catch (error) {
+				console.error("Error fetching case information:", error);
+			}
+		};
+
+		fetchCaseInfo();
 	}, []);
 
 	const scrollToBottom = () => {
@@ -152,24 +172,45 @@ export default function ChatPage() {
 					</div>
 				</header>
 				<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+					{hasSubmitted && (
+						<Card>
+							<CardHeader>
+								<CardTitle>
+									<h1 className="text-xl mb-4">
+										{caseInfo?.title}
+									</h1>
+									<p className="text-md mb-4">
+										Party A: {caseInfo?.partyA}
+									</p>
+									<p className="text-md mb-4">
+										Party B: {caseInfo?.partyB}
+									</p>
+
+									{caseInfo?.status === "resolved" &&
+										<p className="text-md mb-4">
+											{caseInfo?.status === "resolved" ? 'This case is resolved. You can review the case but cant ask more' : ''}
+										</p>
+									}
+								</CardTitle>
+							</CardHeader>
+						</Card>
+					)}
 					<Card className="flex flex-1 flex-col">
 						<div className="flex-1 overflow-y-auto p-4">
 							<div className="flex flex-col gap-4">
 								{messages.map((message) => (
 									<div
 										key={message.id}
-										className={`flex ${
-											message.isUser
-												? "justify-end"
-												: "justify-start"
-										}`}
+										className={`flex ${message.isUser
+											? "justify-end"
+											: "justify-start"
+											}`}
 									>
 										<div
-											className={`max-w-[80%] rounded-lg px-4 py-2 ${
-												message.isUser
-													? "bg-primary text-primary-foreground"
-													: "bg-muted"
-											}`}
+											className={`max-w-[80%] rounded-lg px-4 py-2 ${message.isUser
+												? "bg-primary text-primary-foreground"
+												: "bg-muted"
+												}`}
 										>
 											{message.content}
 										</div>
@@ -188,12 +229,12 @@ export default function ChatPage() {
 									}
 									onKeyDown={handleKeyPress}
 									className="flex-1"
-									disabled={isLoading}
+									disabled={isLoading || caseInfo?.status == "resolved"}
 								/>
 								<Button
 									onClick={handleSendMessage}
 									size="icon"
-									disabled={isLoading}
+									disabled={isLoading || caseInfo?.status == "resolved"}
 								>
 									<Send className="h-4 w-4" />
 									<span className="sr-only">

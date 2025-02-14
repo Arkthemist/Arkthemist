@@ -17,10 +17,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CaseList } from "@/components/case-list";
-import { activeCases } from "@/utils/cases";
+import { getAllCases } from "@/utils/cases";
 import { MessageCircle, PlusCircle } from "lucide-react";
 
-export default function Page() {
+export default async function DashboardPage() {
+	const cases = await getAllCases();
+
+	// Filter cases based on their status
+	const activeCasesList = cases.filter((caseItem: any) => caseItem.status === "active");
+	const resolvedCasesList = cases.filter((caseItem: any) => caseItem.status === "resolved");
+
 	return (
 		<SidebarProvider>
 			<AppSidebar />
@@ -57,14 +63,19 @@ export default function Page() {
 										Active Cases
 									</h2>
 									<div className="w-full">
-										<CaseList cases={activeCases} />
+										<CaseList cases={activeCasesList} />
 									</div>
 								</div>
 							</Card>
-							<Card className="flex items-center justify-center border-border bg-card p-6">
-								<h2 className="text-2xl font-semibold text-foreground">
-									Resolved Cases
-								</h2>
+							<Card className="flex items-center justify-center border-border bg-card">
+								<div className="w-full p-6">
+									<h2 className="text-2xl font-semibold text-foreground mb-4">
+										Resolved Cases
+									</h2>
+									<div className="w-full">
+										<CaseList cases={resolvedCasesList} />
+									</div>
+								</div>
 							</Card>
 						</div>
 
@@ -98,6 +109,7 @@ export default function Page() {
 								</Link>
 							</Button>
 						</div>
+
 					</div>
 				</div>
 			</SidebarInset>

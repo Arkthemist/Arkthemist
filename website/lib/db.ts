@@ -18,7 +18,9 @@ async function dbConnect() {
   }
 
   try {
-    const db = await mongoose.connect(MONGODB_URI ?? '');
+    const db = await mongoose.connect(MONGODB_URI ?? '', {
+      dbName: 'elizaAgent' // Explicitly set the database name
+    });
     connection.isConnected = db.connections[0].readyState;
   } catch (error) {
     console.error('Error connecting to database:', error);

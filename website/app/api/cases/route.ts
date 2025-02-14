@@ -5,12 +5,12 @@ import Case from '@/models/Case';
 export async function POST(request: Request) {
   try {
     await dbConnect();
-    
+
     const body = await request.json();
 
     console.log('body', body)
 
-    const { title, description, userId, roomId } = body;
+    const { title, description, userId, roomId, partyA, partyB, amount } = body;
 
     // Validate required fields
     if (!title || !description || !userId || !roomId) {
@@ -25,7 +25,10 @@ export async function POST(request: Request) {
       description,
       userId,
       roomId,
-      status: 'open',
+      status: 'active',
+      partyA,
+      partyB,
+      amount
     });
 
     const savedCase = await newCase.save();
@@ -42,19 +45,9 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     await dbConnect();
-    
-    const { searchParams } = new URL(request.url);
-    const roomId = searchParams.get('roomId');
-    
-    if (!roomId) {
-      return NextResponse.json(
-        { error: 'Room ID is required' },
-        { status: 400 }
-      );
-    }
 
-    const cases = await Case.find({ roomId }).sort({ createdAt: -1 });
-    return NextResponse.json(cases);
+    const allCases = await Case.find().sort({ createdAt: -1 });
+    return NextResponse.json(allCases);
   } catch (error) {
     console.error('Error fetching cases:', error);
     return NextResponse.json(

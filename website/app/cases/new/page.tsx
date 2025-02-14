@@ -64,8 +64,6 @@ export default function NewCasePage() {
 	const [caseInfo, setCaseInfo] = useState<any>({});
 	const [showPayment, setShowPayment] = useState(false);
 
-	console.log("res messages", messages);
-
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	};
@@ -155,7 +153,10 @@ export default function NewCasePage() {
 					title: formData.title ?? '',
 					description: formData.claim ?? '',
 					userId: '1',
-					roomId: roomId ?? ''
+					roomId: roomId ?? '',
+					partyA: formData.yourAddress ?? '',
+					partyB: formData.defendantAddress ?? '',
+					amount: formData.amount ?? ''
 				}),
 			});
 
