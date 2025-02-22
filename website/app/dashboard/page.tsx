@@ -31,6 +31,8 @@ import { AppLawyerSidebar } from "@/components/app-lawyer-sidebar";
 export default function DashboardPage() {
 	const { isLoggedIn, user } = useAuth();
 
+	console.log('user', user)
+
 	return (
 		<SidebarProvider>
 
