@@ -5,7 +5,7 @@ export const character: Character = {
 	//...defaultCharacter,
 	name: "Eliza Legal",
 	plugins: [starknetPlugin],
-	clients: [Clients.TWITTER],
+	clients: [],
 	modelProvider: ModelProviderName.GAIANET,
 	settings: {
 		secrets: {},

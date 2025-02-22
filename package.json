@@ -1,8 +1,15 @@
 {
 	"devDependencies": {
+		"@types/mongoose": "^5.11.96",
 		"prettier": "3.4.2"
 	},
 	"scripts": {
 		"fmt": "prettier --write ."
+	},
+	"dependencies": {
+		"@starknet-react/chains": "^3.1.2",
+		"@starknet-react/core": "^3.7.2",
+		"mongoose": "^8.10.1",
+		"starknetkit": "^2.6.1"
 	}
 }
