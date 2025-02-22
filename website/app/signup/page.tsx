@@ -43,7 +43,7 @@ import { MessageCircle, PlusCircle } from "lucide-react";
 import { UnauthorizedState } from "@/components/unauthorized-state";
 import { useAuth } from "@/contexts/auth-context";
 import { useEffect, useState } from "react";
-import { SignupForm } from "@/components/sign-up-form"
+import { SignUpForm } from "@/components/sign-up-form"
 
 export default function DashboardPage({
 	searchParams,
@@ -51,7 +51,7 @@ export default function DashboardPage({
 	searchParams: { address: string }
 }) {
 
-	const { isLoggedIn } = useAuth();
+	const { isLoggedIn, user } = useAuth();
 	const [cases, setCases] = useState([]);
 
 	useEffect(() => {
@@ -96,9 +96,9 @@ export default function DashboardPage({
 				</header>
 				<div>
 					<div className="min-h-screen bg-background p-4 space-y-6">
-						{isLoggedIn ? (
+						{user?.userType ? (
 							<>
-								You are already logged in
+								You are ready to use the app
 							</>
 						) : (
 							<div className="  py-10">
@@ -106,7 +106,7 @@ export default function DashboardPage({
 									<h1 className="text-3xl font-bold">Complete Your Profile</h1>
 									<p className="text-muted-foreground">Please provide additional information to complete your signup</p>
 								</div>
-								<SignupForm address={searchParams.address} />
+								<SignUpForm address={searchParams.address} />
 							</div>
 						)}
 					</div>

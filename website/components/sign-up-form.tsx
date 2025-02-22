@@ -1,115 +1,144 @@
 "use client"
 
-import type React from "react"
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/auth-context';
+import { Label } from '@/components/ui/label';
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useAuth, mockUsers } from "@/contexts/auth-context"
+const formSchema = z.object({
+  walletAddress: z.string().optional(),
+  name: z.string().min(2, {
+    message: 'Name must be at least 2 characters.',
+  }),
+  userType: z.enum(['client', 'lawyer']),
+  specialty: z.string().optional(),
+});
 
-export function SignupForm({ address }: { address: string }) {
-  const [userType, setUserType] = useState<"lawyer" | "client">()
-  const router = useRouter()
-  const { login } = useAuth()
+interface SignUpFormProps {
+  address: string
+}
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+export function SignUpForm({ address }: SignUpFormProps) {
+  const router = useRouter();
+  const { login } = useAuth();
 
-    const formData = new FormData(event.currentTarget)
-    const data = {
-      address,
-      type: userType,
-      name: formData.get("name"),
-      email: formData.get("email"),
-      specialty: formData.get("specialty"),
-    }
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      userType: 'client',
+      specialty: '',
+      walletAddress: address ?? ''
+    },
+  });
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      // const response = await fetch("/api/signup", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(data),
-      // })
+      console.log('values', values)
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
 
-      if (true) {//response.ok
-        // Determine which mock user to login based on userType
-        const userToLogin = userType === "lawyer" ? mockUsers.lawyer : mockUsers.client
-        login(userToLogin)
-        router.push("/dashboard")
+      if (!response.ok) {
+        throw new Error('Failed to create user');
       }
+
+      const user = await response.json();
+      login(user);
+      // Redirect after successful login
+      router.push('/dashboard');
     } catch (error) {
-      console.error("Signup failed:", error)
+      console.error('Error creating user:', error);
     }
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Select User Type</CardTitle>
-          <CardDescription>Choose whether you want to sign up as a lawyer or a client</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <RadioGroup
-            onValueChange={(value: any) => setUserType(value as "lawyer" | "client")}
-            className="grid grid-cols-2 gap-4"
-          >
-            <div>
-              <RadioGroupItem value="lawyer" id="lawyer" className="peer sr-only" />
-              <Label
-                htmlFor="lawyer"
-                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-              >
-                <span>Lawyer</span>
-              </Label>
-            </div>
-            <div>
-              <RadioGroupItem value="client" id="client" className="peer sr-only" />
-              <Label
-                htmlFor="client"
-                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-              >
-                <span>Client</span>
-              </Label>
-            </div>
-          </RadioGroup>
-        </CardContent>
-      </Card>
-
-      {userType && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Personal Information</CardTitle>
-            <CardDescription>Please fill in your details below</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" name="name" placeholder="Enter your full name" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" placeholder="Enter your email" required />
-            </div>
-            {userType === "lawyer" && (
-              <div className="space-y-2">
-                <Label htmlFor="specialty">Specialty</Label>
-                <Input id="specialty" name="specialty" placeholder="Enter your legal specialty" required />
-              </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Your name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="userType"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>Account type</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="grid grid-cols-2 gap-4"
+                >
+                  <div>
+                    <RadioGroupItem value="lawyer" id="lawyer" className="peer sr-only" />
+                    <Label
+                      htmlFor="lawyer"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      <span>Lawyer</span>
+                    </Label>
+                  </div>
+                  <div>
+                    <RadioGroupItem value="client" id="client" className="peer sr-only" />
+                    <Label
+                      htmlFor="client"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      <span>Client</span>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {form.watch('userType') === 'lawyer' && (
+          <FormField
+            control={form.control}
+            name="specialty"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Specialty</FormLabel>
+                <FormControl>
+                  <Input placeholder="Your specialty" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-            <Button type="submit" className="w-full">
-              Complete Signup
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-    </form>
-  )
+          />
+        )}
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  );
 }
 

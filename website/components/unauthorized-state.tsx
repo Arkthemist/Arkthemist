@@ -1,8 +1,9 @@
+import SocialLogin from "@/app/components/social-login";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Lock } from "lucide-react";
 import Link from "next/link";
-import { ConnectWallet } from "./connect-wallet";
+// import { ConnectWallet } from "./connect-wallet";
 
 export function UnauthorizedState() {
   return (
@@ -13,7 +14,8 @@ export function UnauthorizedState() {
         Please sign in or create an account to view and manage your cases.
       </p>
       <div className="flex gap-4">
-        <ConnectWallet />
+        {/* <ConnectWallet /> */}
+        <SocialLogin />
       </div>
     </Card>
   );
