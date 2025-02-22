@@ -1,3 +1,22 @@
+
+
+// export default function SignupPage({
+// 	searchParams,
+// }: {
+// 	searchParams: { address: string }
+// }) {
+// 	return (
+// 		<div className="container max-w-xl py-10">
+// 			<div className="mb-8 space-y-2 text-center">
+// 				<h1 className="text-3xl font-bold">Complete Your Profile</h1>
+// 				<p className="text-muted-foreground">Please provide additional information to complete your signup</p>
+// 			</div>
+// 			<SignupForm address={searchParams.address} />
+// 		</div>
+// 	)
+// }
+
+
 'use client'
 
 import { AppSidebar } from "@/components/app-sidebar";
@@ -24,21 +43,34 @@ import { MessageCircle, PlusCircle } from "lucide-react";
 import { UnauthorizedState } from "@/components/unauthorized-state";
 import { useAuth } from "@/contexts/auth-context";
 import { useEffect, useState } from "react";
-import { ClientDashboard } from "@/components/client-dashboard";
-import { LawyerDashboard } from "@/components/lawyer-dashboard";
-import { AppLawyerSidebar } from "@/components/app-lawyer-sidebar";
+import { SignupForm } from "@/components/sign-up-form"
 
-export default function DashboardPage() {
-	const { isLoggedIn, user } = useAuth();
+export default function DashboardPage({
+	searchParams,
+}: {
+	searchParams: { address: string }
+}) {
+
+	const { isLoggedIn } = useAuth();
+	const [cases, setCases] = useState([]);
+
+	useEffect(() => {
+		async function fetchCases() {
+			if (isLoggedIn) {
+				const fetchedCases = await getAllCases();
+				setCases(fetchedCases);
+			}
+		}
+		fetchCases();
+	}, [isLoggedIn]);
+
+	// Filter cases based on their status
+	const activeCasesList = cases.filter((caseItem: any) => caseItem.status === "active");
+	const resolvedCasesList = cases.filter((caseItem: any) => caseItem.status === "resolved");
 
 	return (
 		<SidebarProvider>
-
-			{user?.userType === "lawyer" ? (
-				<AppLawyerSidebar />
-			) : (
-				<AppSidebar />
-			)}
+			<AppSidebar />
 			<SidebarInset>
 				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
 					<div className="flex items-center gap-2 px-4">
@@ -51,7 +83,7 @@ export default function DashboardPage() {
 							<BreadcrumbList>
 								<BreadcrumbItem className="hidden md:block">
 									<BreadcrumbLink href="#">
-										{user ? `Welcome, ${user.name}` : 'Dashboard'}
+										Dashboard
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
@@ -66,14 +98,16 @@ export default function DashboardPage() {
 					<div className="min-h-screen bg-background p-4 space-y-6">
 						{isLoggedIn ? (
 							<>
-								{user?.userType === "lawyer" ? (
-									<LawyerDashboard isLoggedIn={isLoggedIn} />
-								) : (
-									<ClientDashboard isLoggedIn={isLoggedIn} />
-								)}
+								You are already logged in
 							</>
 						) : (
-							<UnauthorizedState />
+							<div className="  py-10">
+								<div className="mb-8 space-y-2 text-center">
+									<h1 className="text-3xl font-bold">Complete Your Profile</h1>
+									<p className="text-muted-foreground">Please provide additional information to complete your signup</p>
+								</div>
+								<SignupForm address={searchParams.address} />
+							</div>
 						)}
 					</div>
 				</div>
@@ -81,3 +115,4 @@ export default function DashboardPage() {
 		</SidebarProvider>
 	);
 }
+
