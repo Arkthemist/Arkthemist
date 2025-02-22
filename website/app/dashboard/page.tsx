@@ -24,28 +24,21 @@ import { MessageCircle, PlusCircle } from "lucide-react";
 import { UnauthorizedState } from "@/components/unauthorized-state";
 import { useAuth } from "@/contexts/auth-context";
 import { useEffect, useState } from "react";
+import { ClientDashboard } from "@/components/client-dashboard";
+import { LawyerDashboard } from "@/components/lawyer-dashboard";
+import { AppLawyerSidebar } from "@/components/app-lawyer-sidebar";
 
 export default function DashboardPage() {
-	const { isLoggedIn } = useAuth();
-	const [cases, setCases] = useState([]);
-
-	useEffect(() => {
-		async function fetchCases() {
-			if (isLoggedIn) {
-				const fetchedCases = await getAllCases();
-				setCases(fetchedCases);
-			}
-		}
-		fetchCases();
-	}, [isLoggedIn]);
-
-	// Filter cases based on their status
-	const activeCasesList = cases.filter((caseItem: any) => caseItem.status === "active");
-	const resolvedCasesList = cases.filter((caseItem: any) => caseItem.status === "resolved");
+	const { isLoggedIn, user } = useAuth();
 
 	return (
 		<SidebarProvider>
-			<AppSidebar />
+
+			{user?.userType === "lawyer" ? (
+				<AppLawyerSidebar />
+			) : (
+				<AppSidebar />
+			)}
 			<SidebarInset>
 				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
 					<div className="flex items-center gap-2 px-4">
@@ -58,7 +51,7 @@ export default function DashboardPage() {
 							<BreadcrumbList>
 								<BreadcrumbItem className="hidden md:block">
 									<BreadcrumbLink href="#">
-										Dashboard
+										{user ? `Welcome, ${user.name}` : 'Dashboard'}
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
@@ -73,60 +66,11 @@ export default function DashboardPage() {
 					<div className="min-h-screen bg-background p-4 space-y-6">
 						{isLoggedIn ? (
 							<>
-								{/* Cases Grid */}
-								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-									<Card className="flex items-center justify-center border-border bg-card">
-										<div className="w-full p-6">
-											<h2 className="text-2xl font-semibold text-foreground mb-4">
-												Active Cases
-											</h2>
-											<div className="w-full">
-												<CaseList cases={activeCasesList} />
-											</div>
-										</div>
-									</Card>
-									<Card className="flex items-center justify-center border-border bg-card">
-										<div className="w-full p-6">
-											<h2 className="text-2xl font-semibold text-foreground mb-4">
-												Resolved Cases
-											</h2>
-											<div className="w-full">
-												<CaseList cases={resolvedCasesList} />
-											</div>
-										</div>
-									</Card>
-								</div>
-
-								{/* Actions */}
-								<div className="space-y-4">
-									<Button
-										variant="outline"
-										className="w-full h-12 bg-card hover:bg-accent hover:text-accent-foreground transition-colors"
-										asChild
-									>
-										<Link
-											href="/cases/new"
-											className="flex items-center justify-center gap-3"
-										>
-											<PlusCircle className="h-4 w-4" />
-											<span>Create a New Case</span>
-										</Link>
-									</Button>
-
-									<Button
-										variant="outline"
-										className="w-full h-12 bg-card hover:bg-accent hover:text-accent-foreground transition-colors"
-										asChild
-									>
-										<Link
-											href="/chat"
-											className="flex items-center justify-center gap-3"
-										>
-											<MessageCircle className="h-4 w-4" />
-											<span>Chat to Get Advice</span>
-										</Link>
-									</Button>
-								</div>
+								{user?.userType === "lawyer" ? (
+									<LawyerDashboard isLoggedIn={isLoggedIn} />
+								) : (
+									<ClientDashboard isLoggedIn={isLoggedIn} />
+								)}
 							</>
 						) : (
 							<UnauthorizedState />

@@ -9,10 +9,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useAuth, mockUsers } from "@/contexts/auth-context"
 
 export function SignupForm({ address }: { address: string }) {
   const [userType, setUserType] = useState<"lawyer" | "client">()
   const router = useRouter()
+  const { login } = useAuth()
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -27,15 +29,18 @@ export function SignupForm({ address }: { address: string }) {
     }
 
     try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
+      // const response = await fetch("/api/signup", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(data),
+      // })
 
-      if (response.ok) {
+      if (true) {//response.ok
+        // Determine which mock user to login based on userType
+        const userToLogin = userType === "lawyer" ? mockUsers.lawyer : mockUsers.client
+        login(userToLogin)
         router.push("/dashboard")
       }
     } catch (error) {

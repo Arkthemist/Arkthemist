@@ -1,0 +1,106 @@
+'use client'
+
+import { AppSidebar } from "@/components/app-sidebar";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { CaseList } from "@/components/case-list";
+import { getAllCases } from "@/utils/cases";
+import { MessageCircle, PlusCircle } from "lucide-react";
+import { UnauthorizedState } from "@/components/unauthorized-state";
+import { useAuth } from "@/contexts/auth-context";
+import { useEffect, useState } from "react";
+
+interface ClientDashboardProps {
+  isLoggedIn?: boolean
+}
+
+export const ClientDashboard = ({ isLoggedIn }: ClientDashboardProps) => {
+  const [cases, setCases] = useState([]);
+
+  useEffect(() => {
+    async function fetchCases() {
+      if (isLoggedIn) {
+        const fetchedCases = await getAllCases();
+        setCases(fetchedCases);
+      }
+    }
+    fetchCases();
+  }, [isLoggedIn]);
+
+  // Filter cases based on their status
+  const activeCasesList = cases.filter((caseItem: any) => caseItem.status === "active");
+  const resolvedCasesList = cases.filter((caseItem: any) => caseItem.status === "resolved");
+
+  return (
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="flex items-center justify-center border-border bg-card">
+          <div className="w-full p-6">
+            <h2 className="text-2xl font-semibold text-foreground mb-4">
+              Active Cases
+            </h2>
+            <div className="w-full">
+              <CaseList cases={activeCasesList} />
+            </div>
+          </div>
+        </Card>
+        <Card className="flex items-center justify-center border-border bg-card">
+          <div className="w-full p-6">
+            <h2 className="text-2xl font-semibold text-foreground mb-4">
+              Resolved Cases
+            </h2>
+            <div className="w-full">
+              <CaseList cases={resolvedCasesList} />
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Actions */}
+      <div className="space-y-4">
+        <Button
+          variant="outline"
+          className="w-full h-12 bg-card hover:bg-accent hover:text-accent-foreground transition-colors"
+          asChild
+        >
+          <Link
+            href="/cases/new"
+            className="flex items-center justify-center gap-3"
+          >
+            <PlusCircle className="h-4 w-4" />
+            <span>Create a New Case</span>
+          </Link>
+        </Button>
+
+        <Button
+          variant="outline"
+          className="w-full h-12 bg-card hover:bg-accent hover:text-accent-foreground transition-colors"
+          asChild
+        >
+          <Link
+            href="/chat"
+            className="flex items-center justify-center gap-3"
+          >
+            <MessageCircle className="h-4 w-4" />
+            <span>Chat to Get Advice</span>
+          </Link>
+        </Button>
+      </div>
+    </div>
+  )
+}
