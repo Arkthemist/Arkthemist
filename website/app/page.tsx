@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MouseTrail } from "../components/ui/mouse-trail";
 import Footer from "./components/Footer";
 import SocialLogin from "./components/social-login";
+import FileHandler from "./components/FileHandler";
 
 export default function Home() {
 	return (
@@ -31,6 +32,7 @@ export default function Home() {
 					>
 						Chat
 					</Link>
+					<FileHandler />
 					<SocialLogin />
 				</div>
 			</nav>
