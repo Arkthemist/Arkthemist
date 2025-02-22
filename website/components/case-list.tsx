@@ -11,9 +11,9 @@ export function CaseList({ cases }: CaseListProps) {
 	return (
 		<ScrollArea className="h-[300px] w-full">
 			<div className="space-y-2">
-				{cases.map((case_) => (
+				{cases.map((case_, index) => (
 					<div
-						key={case_.id}
+						key={index}
 						className="p-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer"
 					>
 						<Link href={`/chat?roomId=${case_.roomId}`}>
