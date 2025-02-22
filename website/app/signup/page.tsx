@@ -1,3 +1,22 @@
+
+
+// export default function SignupPage({
+// 	searchParams,
+// }: {
+// 	searchParams: { address: string }
+// }) {
+// 	return (
+// 		<div className="container max-w-xl py-10">
+// 			<div className="mb-8 space-y-2 text-center">
+// 				<h1 className="text-3xl font-bold">Complete Your Profile</h1>
+// 				<p className="text-muted-foreground">Please provide additional information to complete your signup</p>
+// 			</div>
+// 			<SignupForm address={searchParams.address} />
+// 		</div>
+// 	)
+// }
+
+
 'use client'
 
 import { AppSidebar } from "@/components/app-sidebar";
@@ -24,8 +43,14 @@ import { MessageCircle, PlusCircle } from "lucide-react";
 import { UnauthorizedState } from "@/components/unauthorized-state";
 import { useAuth } from "@/contexts/auth-context";
 import { useEffect, useState } from "react";
+import { SignupForm } from "@/components/sign-up-form"
 
-export default function DashboardPage() {
+export default function DashboardPage({
+	searchParams,
+}: {
+	searchParams: { address: string }
+}) {
+
 	const { isLoggedIn } = useAuth();
 	const [cases, setCases] = useState([]);
 
@@ -73,63 +98,16 @@ export default function DashboardPage() {
 					<div className="min-h-screen bg-background p-4 space-y-6">
 						{isLoggedIn ? (
 							<>
-								{/* Cases Grid */}
-								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-									<Card className="flex items-center justify-center border-border bg-card">
-										<div className="w-full p-6">
-											<h2 className="text-2xl font-semibold text-foreground mb-4">
-												Active Cases
-											</h2>
-											<div className="w-full">
-												<CaseList cases={activeCasesList} />
-											</div>
-										</div>
-									</Card>
-									<Card className="flex items-center justify-center border-border bg-card">
-										<div className="w-full p-6">
-											<h2 className="text-2xl font-semibold text-foreground mb-4">
-												Resolved Cases
-											</h2>
-											<div className="w-full">
-												<CaseList cases={resolvedCasesList} />
-											</div>
-										</div>
-									</Card>
-								</div>
-
-								{/* Actions */}
-								<div className="space-y-4">
-									<Button
-										variant="outline"
-										className="w-full h-12 bg-card hover:bg-accent hover:text-accent-foreground transition-colors"
-										asChild
-									>
-										<Link
-											href="/cases/new"
-											className="flex items-center justify-center gap-3"
-										>
-											<PlusCircle className="h-4 w-4" />
-											<span>Create a New Case</span>
-										</Link>
-									</Button>
-
-									<Button
-										variant="outline"
-										className="w-full h-12 bg-card hover:bg-accent hover:text-accent-foreground transition-colors"
-										asChild
-									>
-										<Link
-											href="/chat"
-											className="flex items-center justify-center gap-3"
-										>
-											<MessageCircle className="h-4 w-4" />
-											<span>Chat to Get Advice</span>
-										</Link>
-									</Button>
-								</div>
+								You are already logged in
 							</>
 						) : (
-							<UnauthorizedState />
+							<div className="  py-10">
+								<div className="mb-8 space-y-2 text-center">
+									<h1 className="text-3xl font-bold">Complete Your Profile</h1>
+									<p className="text-muted-foreground">Please provide additional information to complete your signup</p>
+								</div>
+								<SignupForm address={searchParams.address} />
+							</div>
 						)}
 					</div>
 				</div>
@@ -137,3 +115,4 @@ export default function DashboardPage() {
 		</SidebarProvider>
 	);
 }
+
