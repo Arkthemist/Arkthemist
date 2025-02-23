@@ -24,6 +24,7 @@ import { MessageCircle, PlusCircle } from "lucide-react";
 import { UnauthorizedState } from "@/components/unauthorized-state";
 import { useAuth } from "@/contexts/auth-context";
 import { useEffect, useState } from "react";
+import FileHandler from "../app/components/FileHandler";
 
 interface LawyerDashboardProps {
   isLoggedIn?: boolean
@@ -49,6 +50,7 @@ export const LawyerDashboard = ({ isLoggedIn }: LawyerDashboardProps) => {
   return (
     <div>
      LAWYER DASHBOARD
+     <FileHandler />
     </div>
   )
 }
