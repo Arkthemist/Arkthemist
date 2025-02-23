@@ -16,6 +16,7 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { Form } from "@/components/ui/form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useAuth } from "@/contexts/auth-context"
 
 interface DocumentTemplate {
   id: string
@@ -47,33 +48,34 @@ const documentTemplates: DocumentTemplate[] = [
 
 const lawyersList: any[] = [
   {
-    id: "divorce",
-    title: "Pedro Rodriguez",
+    id: "0x01d671a993ed2560bf2e9bfe4c8041ef8af54b631db849bf5767dbae846fdf4f",
+    title: "Robert Ramirez",
     description: "Divorce lawyer with +5 years of experience",
     estimatedTime: "1 week",
     price: "$50/document",
   },
   {
-    id: "property-transfer",
-    title: "Property Transfer Deed",
-    description: "Legal transfer of real estate property ownership between parties",
+    id: "0x02d671a993ed2560bf2e9bfe4c8041ef8af54b631db849bf5767dbae846fdf4f",
+    title: "Jane Doe",
+    description: "Real estate lawyer specializing in property transfer deeds",
     estimatedTime: "1-2 weeks",
-    price: "$800",
+    price: "$90/document",
   },
   {
-    id: "power-of-attorney",
-    title: "Power of Attorney",
-    description: "Legal authorization for someone to act on your behalf in specified matters",
+    id: "0x03d671a993ed2560bf2e9bfe4c8041ef8af54b631db849bf5767dbae846fdf4f",
+    title: "John Smith",
+    description: "Experienced attorney for power of attorney matters",
     estimatedTime: "3-5 days",
-    price: "$400",
+    price: "$40/document",
   },
 ]
 
 export const DocumentsRequestForm = () => {
+  const { login, logout, loginWithWallet, user } = useAuth()
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState<string>("")
   const [selectedLawyer, setSelectedLawyer] = useState<string>("")
-
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Determine the schema and fields based on the selected template
   let personalInfoFormSchemaCustom;
@@ -112,10 +114,51 @@ export const DocumentsRequestForm = () => {
   })
   const { setValue, handleSubmit, watch, register, formState, getValues, trigger, reset } = form;
 
-  const onSubmit: SubmitHandler<z.infer<typeof infoSchema>> = (values) => {
-    console.log('Form Values:', values)
-    console.log('Selected Template:', selectedTemplate)
-    console.log('Selected Lawyer:', selectedLawyer)
+  const onSubmit: SubmitHandler<z.infer<typeof infoSchema>> = async (values) => {
+    setIsSubmitting(true);
+    try {
+      // Get the selected lawyer's price
+      const selectedLawyerData = lawyersList.find((l) => l.id === selectedLawyer);
+      const price = selectedLawyerData?.price || '0';
+      const numericPrice = parseInt(price.replace(/[^0-9]/g, ''));
+
+      const response = await fetch('/api/forms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'user-type': 'client', // Assuming this is for a regular user
+          'user-id': user?.walletAddress || '', // Using the id from the form values
+        },
+        body: JSON.stringify({
+          type: selectedTemplate,
+          lawyer: selectedLawyer,
+          user_id: user?.walletAddress,
+          input: {
+            ...values,
+            template: selectedTemplate,
+          },
+          amount: numericPrice,
+          currency: 'USD',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      const data = await response.json();
+      console.log('Success:', data);
+      
+      // Close the modal and reset form
+      setIsRequestModalOpen(false);
+      reset();
+      
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -135,14 +178,10 @@ export const DocumentsRequestForm = () => {
             </DialogDescription>
           </DialogHeader>
 
-
           <div className="mt-4 space-y-6 overflow-y-auto">
-
             <Form {...form}>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 ">
-
                 <div>
-
                   <div className="">
                     <div className="space-y-4">
                       <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
@@ -201,7 +240,6 @@ export const DocumentsRequestForm = () => {
                         </Card>
                       )}
 
-
                       {dynamicFields && (
                         <div className='!mt-[10px]'>
                           {dynamicFields.map((item: any, index: number) => (
@@ -209,7 +247,6 @@ export const DocumentsRequestForm = () => {
                           ))}
                         </div>
                       )}
-
 
                       <div className="space-y-2">
                         <h4 className="text-sm font-medium">Additional Details</h4>
@@ -225,20 +262,16 @@ export const DocumentsRequestForm = () => {
                     <Button variant="outline" onClick={() => setIsRequestModalOpen(false)}>
                       Cancel
                     </Button>
-                    <Button type="submit">
-                      Submit Request
+                    <Button type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? 'Submitting...' : 'Submit Request'}
                     </Button>
                   </div>
-
                 </div>
               </form>
             </Form>
-
-
           </div>
         </DialogContent>
       </Dialog>
-
     </div>
   )
 }

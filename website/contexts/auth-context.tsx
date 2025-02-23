@@ -21,8 +21,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState<User | null>(null)
 
-  console.log('user', user)
-
   // Load user from localStorage on initial mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user')

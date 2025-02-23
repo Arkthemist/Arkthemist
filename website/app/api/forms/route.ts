@@ -70,7 +70,7 @@ export async function GET(request: Request) {
       let forms;
       if (userType === 'lawyer') {
         forms = await Form.find({ lawyer: userId }).sort({ createdAt: -1 });
-      } else if (userType === 'user') {
+      } else if (userType === 'client') {
         forms = await Form.find({ user_id: userId }).sort({ createdAt: -1 });
       } else {
         return NextResponse.json(
