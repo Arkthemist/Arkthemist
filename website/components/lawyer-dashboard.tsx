@@ -25,6 +25,7 @@ import { UnauthorizedState } from "@/components/unauthorized-state";
 import { useAuth } from "@/contexts/auth-context";
 import { useEffect, useState } from "react";
 import FileHandler from "../app/components/FileHandler";
+import LawyerDocumentsList from "./lawyer-documents-list";
 
 interface LawyerDashboardProps {
   isLoggedIn?: boolean
@@ -49,8 +50,10 @@ export const LawyerDashboard = ({ isLoggedIn }: LawyerDashboardProps) => {
 
   return (
     <div>
-     LAWYER DASHBOARD
-     <FileHandler />
+      {/* LAWYER DASHBOARD
+     <FileHandler /> */}
+
+      <LawyerDocumentsList />
     </div>
   )
 }

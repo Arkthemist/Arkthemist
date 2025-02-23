@@ -25,7 +25,6 @@ export default function DashboardPage() {
 
 	return (
 		<SidebarProvider>
-
 			{user?.userType === "lawyer" ? (
 				<AppLawyerSidebar />
 			) : (

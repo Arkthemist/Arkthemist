@@ -1,6 +1,6 @@
 "use client"
 
-import { FileText } from "lucide-react"
+import { FileText, UserRound } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,6 +8,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DocumentsRequestForm } from "./document-request-form"
 import { useAuth } from "@/contexts/auth-context"
+import { Separator } from "./ui/separator"
+import { DocumentUpload } from "./document-upload"
 
 interface Document {
   _id: string
@@ -15,22 +17,25 @@ interface Document {
   case_status: string
   input: any
   documentUrl?: string
+  formId?: string
   createdAt: string
 }
 
-export default function DocumentsList() {
+export default function LawyerDocumentsList() {
   const { isLoggedIn, user } = useAuth();
   const [documents, setDocuments] = useState<Document[]>([])
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
+  console.log('selectedDocument', selectedDocument)
+
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
         const response = await fetch('/api/forms', {
           headers: {
-            'user-type': 'client', // or 'lawyer' depending on the user type
+            'user-type': 'lawyer', // or 'lawyer' depending on the user type
             'user-id': user?.walletAddress ?? ''
           },
         })
@@ -49,6 +54,39 @@ export default function DocumentsList() {
     fetchDocuments()
   }, [])
 
+
+  const sendForSignature = async () => {
+    if (!selectedDocument) return;
+
+    try {
+      const response = await fetch('/api/forms', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'user-type': 'lawyer',
+          'user-id': user?.walletAddress ?? '',
+        },
+        body: JSON.stringify({
+          id: selectedDocument._id ?? '',
+          case_status: 'pending-signature',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update document status');
+      }
+
+      const updatedDocument = await response.json();
+      setDocuments((prevDocs) =>
+        prevDocs.map((doc) => (doc._id === updatedDocument._id ? updatedDocument : doc))
+      );
+
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error sending for signature:', error);
+    }
+  }
+
   const pendingDocuments = documents.filter((doc: any) => doc.case_status === 'pending-lawyer')
   const signedDocuments = documents.filter((doc: any) => doc.case_status === 'pending-signature')
   const completedDocuments = documents.filter((doc: any) => doc.case_status === 'completed')
@@ -57,23 +95,23 @@ export default function DocumentsList() {
     <div className="container mx-auto p-6">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Legal Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Lawyer Dashboard</h1>
           <p className="text-lg text-muted-foreground">
-            Request documents from lawyers, review your requests, and view documents signed by lawyers.
+            Manage client documents: review, create, and sign with ease.
           </p>
         </div>
-        <DocumentsRequestForm />
       </div>
 
       <Tabs defaultValue="pending" className="w-full">
         <TabsList>
-          <TabsTrigger value="pending">Pending Documents</TabsTrigger>
+          <TabsTrigger value="pending">Pending requests</TabsTrigger>
           <TabsTrigger value="signed">Signed Documents</TabsTrigger>
           <TabsTrigger value="completed">Completed Documents</TabsTrigger>
         </TabsList>
         <TabsContent value="pending" className="mt-6">
 
-          {pendingDocuments && <p className="mb-2">The lawyer is reviewing these documents. You don't need to take any action at this time.</p>}
+          {pendingDocuments.length > 0 && <p className="mb-2">You have documents pending review. Please check them for any necessary actions.</p>}
+          {pendingDocuments.length === 0 && <p className="mb-2">You don't have any requests to review.</p>}
 
           {isLoading ? (
             <div className="text-center p-6">Loading...</div>
@@ -101,7 +139,7 @@ export default function DocumentsList() {
                         setIsModalOpen(true)
                       }}
                     >
-                      Review your request
+                      Review request
                     </Button>
                   </CardFooter>
                 </Card>
@@ -110,7 +148,7 @@ export default function DocumentsList() {
           )}
         </TabsContent>
         <TabsContent value="signed" className="mt-6">
-          {signedDocuments && <p className="mb-2">These documents have been signed by the lawyer but are awaiting your signature.</p>}
+          {signedDocuments && <p className="mb-2">You have signed the contract. Awaiting the user to sign it.</p>}
           {signedDocuments.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2">
               {signedDocuments.map((doc: any) => (
@@ -134,7 +172,7 @@ export default function DocumentsList() {
                         setIsModalOpen(true)
                       }}
                     >
-                      Review and sign
+                      View Document
                     </Button>
                   </CardFooter>
                 </Card>
@@ -149,8 +187,7 @@ export default function DocumentsList() {
         </TabsContent>
 
         <TabsContent value="completed" className="mt-6">
-          {completedDocuments && <p className="mb-2">These documents have been signed by both you and the lawyer. No further action is required.</p>}
-
+          {completedDocuments && <p className="mb-2">These documents have been signed by both you and the client. No further action is required.</p>}
           {completedDocuments.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2">
               {completedDocuments.map((doc: any) => (
@@ -191,7 +228,7 @@ export default function DocumentsList() {
 
       {/* Document Preview Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="h-[90%] max-w-5xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {selectedDocument?.type.replace(/-/g, ' ').replace(/\b\w/g, (char: any) => char.toUpperCase())}
@@ -200,6 +237,65 @@ export default function DocumentsList() {
               Added on {selectedDocument && new Date(selectedDocument.createdAt).toLocaleDateString()}
             </DialogDescription>
           </DialogHeader>
+
+          <div className="grid gap-6">
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <UserRound className="mr-2 h-5 w-5" />
+                    Client Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-2">
+                  <div>
+                    <div className="font-medium">Company</div>
+                    {/* <div className="text-sm text-muted-foreground">{request.client}</div> */}
+                  </div>
+                  <div>
+                    <div className="font-medium">Email</div>
+                    {/* <div className="text-sm text-muted-foreground">{request.clientEmail}</div> */}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <FileText className="mr-2 h-5 w-5" />
+                    Document Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-2">
+                  <div>
+                    <div className="font-medium">Type</div>
+                    {/* <div className="text-sm text-muted-foreground">{request.documentType}</div> */}
+                  </div>
+                  <div>
+                    <div className="font-medium">Description</div>
+                    {/* <div className="text-sm text-muted-foreground">{request.description}</div> */}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            {/* <Card>
+              <CardHeader>
+                <CardTitle>Document Preview</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
+                  <span className="text-muted-foreground">Document preview will be displayed here</span>
+                </div>
+              </CardContent>
+            </Card> */}
+
+            <DocumentUpload />
+            <Separator />
+            <div className="flex justify-end gap-4">
+              <Button variant="outline">Reject Request</Button>
+              <Button onClick={() => sendForSignature()}>Complete & Send for Signature</Button>
+            </div>
+          </div>
+
           <div className="mt-4">
             <div className="rounded-lg border bg-muted/40 p-6">
               <p className="whitespace-pre-wrap font-mono text-sm">
