@@ -4,6 +4,7 @@ import { MouseTrail } from "../components/ui/mouse-trail";
 import Footer from "./components/Footer";
 import SocialLogin from "./components/social-login";
 import FileHandler from "./components/FileHandler";
+import ChatWidget from "./components/ChatWidget";
 
 export default function Home() {
 	return (
@@ -192,6 +193,12 @@ export default function Home() {
 								</div>
 							</div>
 						</div>
+					</div>
+				</section>
+
+				<section className="px-4">
+					<div className="max-w-7xl mx-auto">
+						<ChatWidget />
 					</div>
 				</section>
 
