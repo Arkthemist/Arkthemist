@@ -7,7 +7,7 @@ const FormSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['Contract-for-services', 'POA', 'NDA'],
+    enum: ['services-contract', 'power-of-attorney', 'non-disclosure-agreement'],
     required: true,
   },
   lawyer: {
@@ -42,7 +42,7 @@ const FormSchema = new mongoose.Schema({
   createdBy: {
     userType: {
       type: String,
-      enum: ['lawyer', 'user'],
+      enum: ['lawyer', 'client'],
       required: true,
     },
     userId: {

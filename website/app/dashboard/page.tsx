@@ -1,5 +1,4 @@
 'use client'
-
 import { AppSidebar } from "@/components/app-sidebar";
 import {
 	Breadcrumb,
@@ -15,23 +14,14 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { CaseList } from "@/components/case-list";
-import { getAllCases } from "@/utils/cases";
-import { MessageCircle, PlusCircle } from "lucide-react";
 import { UnauthorizedState } from "@/components/unauthorized-state";
 import { useAuth } from "@/contexts/auth-context";
-import { useEffect, useState } from "react";
 import { ClientDashboard } from "@/components/client-dashboard";
 import { LawyerDashboard } from "@/components/lawyer-dashboard";
 import { AppLawyerSidebar } from "@/components/app-lawyer-sidebar";
 
 export default function DashboardPage() {
 	const { isLoggedIn, user } = useAuth();
-
-	console.log('user', user)
 
 	return (
 		<SidebarProvider>
