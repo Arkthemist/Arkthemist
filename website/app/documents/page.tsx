@@ -28,6 +28,7 @@ import { ClientDashboard } from "@/components/client-dashboard";
 import { LawyerDashboard } from "@/components/lawyer-dashboard";
 import { AppLawyerSidebar } from "@/components/app-lawyer-sidebar";
 import DocumentsList from "@/components/documents-list";
+import ChatWidget from "../components/ChatWidget";
 
 export default function DashboardPage() {
   const { isLoggedIn, user } = useAuth();
@@ -76,6 +77,11 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
+        <section className="px-4">
+					<div className="max-w-7xl mx-auto">
+						<ChatWidget />
+					</div>
+				</section>
       </SidebarInset>
     </SidebarProvider>
   );
