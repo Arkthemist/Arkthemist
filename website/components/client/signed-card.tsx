@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
+import SignDocument from "@/app/components/SignDocument"
 
 interface SignedCardProps {
   selectedDocument?: any
@@ -35,7 +36,7 @@ export const SignedCard = ({ selectedDocument, setIsModalOpen, setDocuments }: S
       const updatedDocument: any = await response.json();
 
       console.log('updatedDocument', updatedDocument);
-      
+
       if (setDocuments) {
         setDocuments((prevDocs: any) =>
           prevDocs.map((doc: any) => (doc._id === updatedDocument._id ? updatedDocument : doc))
@@ -87,12 +88,18 @@ export const SignedCard = ({ selectedDocument, setIsModalOpen, setDocuments }: S
 
       <div className="mt-6 flex justify-end gap-4">
 
-        <Button variant="outline" onClick={() => {
+        {/* <Button variant="outline" onClick={() => {
           approveAndSignDocument()
           setIsModalOpen && setIsModalOpen(false)
         }}>
           Approve document and Sign
-        </Button>
+        </Button> */}
+        <SignDocument
+          onClick={() => {
+            approveAndSignDocument()
+            setIsModalOpen && setIsModalOpen(false)
+          }}
+        />
         {/* <Button variant="outline" onClick={() => { setIsModalOpen && setIsModalOpen(false) }}>
           Close
         </Button> */}

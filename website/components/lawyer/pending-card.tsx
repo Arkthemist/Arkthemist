@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/contexts/auth-context"
 import { DocumentUpload } from "../document-upload"
 import { Separator } from "../ui/separator"
+import SignDocument from "@/app/components/SignDocument"
 
 interface PendingCardProps {
   selectedDocument?: any
@@ -140,7 +141,11 @@ export const PendingCard = ({ selectedDocument, setIsModalOpen, setDocuments }: 
         <Separator />
         <div className="flex justify-end gap-4">
           <Button variant="outline">Reject Request</Button>
-          <Button onClick={() => sendForSignature()}>Complete & Send for Signature</Button>
+          {/* <Button onClick={() => sendForSignature()}>Complete & Send for Signature</Button> */}
+
+          <SignDocument
+            onClick={() => sendForSignature()}
+          />
         </div>
       </div>
 
