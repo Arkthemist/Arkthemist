@@ -10,6 +10,11 @@ import { DocumentsRequestForm } from "./document-request-form"
 import { useAuth } from "@/contexts/auth-context"
 import { Separator } from "./ui/separator"
 import { DocumentUpload } from "./document-upload"
+import { LawyerDocumentCard } from "./lawyer-document-card"
+
+import { PendingCard } from "./lawyer/pending-card"
+import { SignedCard } from "./lawyer/signed-card"
+import { CompletedCard } from "./lawyer/completed-card"
 
 interface Document {
   _id: string
@@ -55,37 +60,7 @@ export default function LawyerDocumentsList() {
   }, [])
 
 
-  const sendForSignature = async () => {
-    if (!selectedDocument) return;
 
-    try {
-      const response = await fetch('/api/forms', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'user-type': 'lawyer',
-          'user-id': user?.walletAddress ?? '',
-        },
-        body: JSON.stringify({
-          id: selectedDocument._id ?? '',
-          case_status: 'pending-signature',
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update document status');
-      }
-
-      const updatedDocument = await response.json();
-      setDocuments((prevDocs) =>
-        prevDocs.map((doc) => (doc._id === updatedDocument._id ? updatedDocument : doc))
-      );
-
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error('Error sending for signature:', error);
-    }
-  }
 
   const pendingDocuments = documents.filter((doc: any) => doc.case_status === 'pending-lawyer')
   const signedDocuments = documents.filter((doc: any) => doc.case_status === 'pending-signature')
@@ -118,64 +93,25 @@ export default function LawyerDocumentsList() {
           ) : (
             <div className="grid gap-6 md:grid-cols-2">
               {pendingDocuments.map((doc: any) => (
-                <Card key={doc._id}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <FileText className="h-5 w-5" />
-                      {doc.type.replace(/-/g, ' ').replace(/\b\w/g, (char: any) => char.toUpperCase())}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Added on {new Date(doc.createdAt).toLocaleDateString()}
-                    </p>
-                    {/* <p className="mt-2 text-sm">This document requires your attention</p> */}
-                  </CardContent>
-                  <CardFooter>
-                    <Button
-                      className="w-full"
-                      onClick={() => {
-                        setSelectedDocument(doc)
-                        setIsModalOpen(true)
-                      }}
-                    >
-                      Review request
-                    </Button>
-                  </CardFooter>
-                </Card>
+                <LawyerDocumentCard
+                  doc={doc}
+                  setSelectedDocument={setSelectedDocument}
+                  setIsModalOpen={setIsModalOpen}
+                />
               ))}
             </div>
           )}
         </TabsContent>
         <TabsContent value="signed" className="mt-6">
-          {signedDocuments && <p className="mb-2">You have signed the contract. Awaiting the user to sign it.</p>}
+          {signedDocuments && <p className="mb-2">You have uploaded and signed the contract. Awaiting the user to sign it.</p>}
           {signedDocuments.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2">
               {signedDocuments.map((doc: any) => (
-                <Card key={doc._id}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <FileText className="h-5 w-5" />
-                      {doc.type.replace(/-/g, ' ').replace(/\b\w/g, (char: any) => char.toUpperCase())}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Signed on {new Date(doc.createdAt).toLocaleDateString()}
-                    </p>
-                  </CardContent>
-                  <CardFooter>
-                    <Button
-                      className="w-full"
-                      onClick={() => {
-                        setSelectedDocument(doc)
-                        setIsModalOpen(true)
-                      }}
-                    >
-                      View Document
-                    </Button>
-                  </CardFooter>
-                </Card>
+                <LawyerDocumentCard
+                  doc={doc}
+                  setSelectedDocument={setSelectedDocument}
+                  setIsModalOpen={setIsModalOpen}
+                />
               ))}
             </div>
           ) : (
@@ -191,30 +127,11 @@ export default function LawyerDocumentsList() {
           {completedDocuments.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2">
               {completedDocuments.map((doc: any) => (
-                <Card key={doc._id}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <FileText className="h-5 w-5" />
-                      {doc.type.replace(/-/g, ' ').replace(/\b\w/g, (char: any) => char.toUpperCase())}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Signed on {new Date(doc.createdAt).toLocaleDateString()}
-                    </p>
-                  </CardContent>
-                  <CardFooter>
-                    <Button
-                      className="w-full"
-                      onClick={() => {
-                        setSelectedDocument(doc)
-                        setIsModalOpen(true)
-                      }}
-                    >
-                      View Document
-                    </Button>
-                  </CardFooter>
-                </Card>
+                <LawyerDocumentCard
+                  doc={doc}
+                  setSelectedDocument={setSelectedDocument}
+                  setIsModalOpen={setIsModalOpen}
+                />
               ))}
             </div>
           ) : (
@@ -229,93 +146,9 @@ export default function LawyerDocumentsList() {
       {/* Document Preview Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="h-[90%] max-w-5xl overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {selectedDocument?.type.replace(/-/g, ' ').replace(/\b\w/g, (char: any) => char.toUpperCase())}
-            </DialogTitle>
-            <DialogDescription>
-              Added on {selectedDocument && new Date(selectedDocument.createdAt).toLocaleDateString()}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="grid gap-6">
-            <div className="grid gap-4 md:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <UserRound className="mr-2 h-5 w-5" />
-                    Client Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-2">
-                  <div>
-                    <div className="font-medium">Company</div>
-                    {/* <div className="text-sm text-muted-foreground">{request.client}</div> */}
-                  </div>
-                  <div>
-                    <div className="font-medium">Email</div>
-                    {/* <div className="text-sm text-muted-foreground">{request.clientEmail}</div> */}
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <FileText className="mr-2 h-5 w-5" />
-                    Document Details
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-2">
-                  <div>
-                    <div className="font-medium">Type</div>
-                    {/* <div className="text-sm text-muted-foreground">{request.documentType}</div> */}
-                  </div>
-                  <div>
-                    <div className="font-medium">Description</div>
-                    {/* <div className="text-sm text-muted-foreground">{request.description}</div> */}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            {/* <Card>
-              <CardHeader>
-                <CardTitle>Document Preview</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
-                  <span className="text-muted-foreground">Document preview will be displayed here</span>
-                </div>
-              </CardContent>
-            </Card> */}
-
-            <DocumentUpload />
-            <Separator />
-            <div className="flex justify-end gap-4">
-              <Button variant="outline">Reject Request</Button>
-              <Button onClick={() => sendForSignature()}>Complete & Send for Signature</Button>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <div className="rounded-lg border bg-muted/40 p-6">
-              <p className="whitespace-pre-wrap font-mono text-sm">
-                {selectedDocument?.documentUrl ? (
-                  <iframe
-                    src={selectedDocument.documentUrl}
-                    className="w-full h-[60vh]"
-                    title="Document Preview"
-                  />
-                ) : (
-                  JSON.stringify(selectedDocument?.input, null, 2)
-                )}
-              </p>
-            </div>
-          </div>
-          <div className="mt-6 flex justify-end gap-4">
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-              Close
-            </Button>
-          </div>
+          {selectedDocument?.case_status === 'pending-lawyer' && <PendingCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} />}
+          {selectedDocument?.case_status === 'pending-signature' && <SignedCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} setDocuments={setDocuments} />}
+          {selectedDocument?.case_status === 'completed' && <CompletedCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} />}
         </DialogContent>
       </Dialog>
     </div>
