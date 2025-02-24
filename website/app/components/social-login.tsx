@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react";
 import { connect, disconnect } from "starknetkit";
+import { provider } from "../../utils/constants";
 
 interface IWalletConnection {
   wallet?: any;
@@ -18,6 +19,7 @@ export default function SocialLogin({ simpleStyle = false }: SocialLoginProps) {
   const router = useRouter()
   const { login, logout, loginWithWallet } = useAuth()
   const [walletConnection, setWalletConnection] = useState<IWalletConnection | null>(null);
+  const { setAccount, setWallet } = useAuth();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -53,6 +55,11 @@ export default function SocialLogin({ simpleStyle = false }: SocialLoginProps) {
         if (address) {
           loginWithWallet(address)
         }
+
+        let account = await result.connector?.account(provider);
+        setAccount(account);
+        setWallet(result.wallet);
+        
 
         // if (true) {
         //   router.push(`/signup?address=${address}`)

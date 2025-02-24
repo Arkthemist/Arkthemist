@@ -12,6 +12,10 @@ interface AuthContextType {
   logout: () => void
   updateUser: (userData: Partial<User>) => void
   loginWithWallet: (walletAddress: string) => void
+  setAccount: (account: any | null) => void
+  setWallet: (wallet: any | null) => void
+  account: any | null
+  wallet: any | null
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -20,6 +24,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState<User | null>(null)
+  const [account, setAccount] = useState<any | null>(null)
+  const [wallet, setWallet] = useState<any | null>(null)
 
   // Load user from localStorage on initial mount
   useEffect(() => {
@@ -98,6 +104,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null)
     setIsLoggedIn(false)
+    setAccount(null)
+    setWallet(null)
     // Remove user data from localStorage
     localStorage.removeItem('user')
   }
@@ -131,7 +139,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login, 
         logout, 
         updateUser,
-        loginWithWallet
+        loginWithWallet, 
+        setAccount, 
+        setWallet,
+        account,
+        wallet
       }}
     >
       {children}
