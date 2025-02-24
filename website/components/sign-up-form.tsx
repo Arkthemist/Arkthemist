@@ -23,6 +23,9 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: 'Name must be at least 2 characters.',
   }),
+  email: z.string().min(2, {
+    message: 'Email must be at least 2 characters.',
+  }),
   userType: z.enum(['client', 'lawyer']),
   specialty: z.string().optional(),
 });
@@ -39,6 +42,7 @@ export function SignUpForm({ address }: SignUpFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
+      email: '',
       userType: 'client',
       specialty: '',
       walletAddress: address ?? ''
@@ -80,6 +84,19 @@ export function SignUpForm({ address }: SignUpFormProps) {
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="Your name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="Your email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
