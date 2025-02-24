@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import FileHandler from "@/app/components/FileHandler"
 
 export const DocumentUpload = () => {
   const [isDocumentUploaded, setIsDocumentUploaded] = useState(false)
@@ -35,10 +36,10 @@ export const DocumentUpload = () => {
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Document Preview</CardTitle>
+          <CardTitle>Document/Contract uploading</CardTitle>
         </CardHeader>
         <CardContent>
-          <div
+          {/* <div
             className={`flex items-center justify-center rounded-lg border border-dashed cursor-pointer ${isDocumentUploaded ? 'h-[400px]' : 'h-[200px]'}`}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
@@ -53,7 +54,9 @@ export const DocumentUpload = () => {
             ref={fileInputRef}
             style={{ display: 'none' }}
             onChange={handleFileChange}
-          />
+          /> */}
+
+          <FileHandler />
         </CardContent>
       </Card>
     </div>

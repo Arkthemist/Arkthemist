@@ -85,11 +85,12 @@ export default function DocumentsList() {
             <div className="text-center p-6">Loading...</div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2">
-              {pendingDocuments.map((doc: any) => (
+              {pendingDocuments.map((doc: any, index: number) => (
                 <DocumentCard
                   doc={doc}
                   setSelectedDocument={setSelectedDocument}
                   setIsModalOpen={setIsModalOpen}
+                  key={`client-pendingDocuments-${index}`}
                 />
               ))}
             </div>
@@ -99,11 +100,12 @@ export default function DocumentsList() {
           {signedDocuments && <p className="mb-2">These documents have been signed by the lawyer but are awaiting your signature.</p>}
           {signedDocuments.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2">
-              {signedDocuments.map((doc: any) => (
+              {signedDocuments.map((doc: any, index: number) => (
                 <DocumentCard
                   doc={doc}
                   setSelectedDocument={setSelectedDocument}
                   setIsModalOpen={setIsModalOpen}
+                  key={`client-signedDocuments-${index}`}
                 />
               ))}
             </div>
@@ -120,11 +122,12 @@ export default function DocumentsList() {
 
           {completedDocuments.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2">
-              {completedDocuments.map((doc: any) => (
+              {completedDocuments.map((doc: any, index: number) => (
                 <DocumentCard
                   doc={doc}
                   setSelectedDocument={setSelectedDocument}
                   setIsModalOpen={setIsModalOpen}
+                  key={`client-completedDocuments-${index}`}
                 />
               ))}
             </div>

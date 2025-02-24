@@ -92,11 +92,12 @@ export default function LawyerDocumentsList() {
             <div className="text-center p-6">Loading...</div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2">
-              {pendingDocuments.map((doc: any) => (
+              {pendingDocuments.map((doc: any, index: number) => (
                 <LawyerDocumentCard
                   doc={doc}
                   setSelectedDocument={setSelectedDocument}
                   setIsModalOpen={setIsModalOpen}
+                  key={`lawyer-pendingDocuments-${index}`}
                 />
               ))}
             </div>
@@ -106,11 +107,12 @@ export default function LawyerDocumentsList() {
           {signedDocuments && <p className="mb-2">You have uploaded and signed the contract. Awaiting the user to sign it.</p>}
           {signedDocuments.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2">
-              {signedDocuments.map((doc: any) => (
+              {signedDocuments.map((doc: any, index: number) => (
                 <LawyerDocumentCard
                   doc={doc}
                   setSelectedDocument={setSelectedDocument}
                   setIsModalOpen={setIsModalOpen}
+                  key={`lawyer-signedDocuments-${index}`}
                 />
               ))}
             </div>
@@ -126,11 +128,12 @@ export default function LawyerDocumentsList() {
           {completedDocuments && <p className="mb-2">These documents have been signed by both you and the client. No further action is required.</p>}
           {completedDocuments.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2">
-              {completedDocuments.map((doc: any) => (
+              {completedDocuments.map((doc: any, index: number) => (
                 <LawyerDocumentCard
                   doc={doc}
                   setSelectedDocument={setSelectedDocument}
                   setIsModalOpen={setIsModalOpen}
+                  key={`lawyer-completedDocuments-${index}`}
                 />
               ))}
             </div>
