@@ -1,6 +1,6 @@
 "use client"
 
-import { FileText } from "lucide-react"
+import { FileText, UserRound } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,10 +8,13 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DocumentsRequestForm } from "./document-request-form"
 import { useAuth } from "@/contexts/auth-context"
-import { DocumentCard } from "./document-card"
-import { PendingCard } from "./client/pending-card"
-import { SignedCard } from "./client/signed-card"
-import { CompletedCard } from "./client/completed-card"
+import { Separator } from "./ui/separator"
+import { DocumentUpload } from "./document-upload"
+import { LawyerDocumentCard } from "./lawyer-document-card"
+
+import { PendingCard } from "./lawyer/pending-card"
+import { SignedCard } from "./lawyer/signed-card"
+import { CompletedCard } from "./lawyer/completed-card"
 
 interface Document {
   _id: string
@@ -19,10 +22,11 @@ interface Document {
   case_status: string
   input: any
   documentUrl?: string
+  formId?: string
   createdAt: string
 }
 
-export default function DocumentsList() {
+export default function LawyerDocumentsList() {
   const { isLoggedIn, user } = useAuth();
   const [documents, setDocuments] = useState<Document[]>([])
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null)
@@ -36,7 +40,7 @@ export default function DocumentsList() {
       try {
         const response = await fetch('/api/forms', {
           headers: {
-            'user-type': 'client', // or 'lawyer' depending on the user type
+            'user-type': 'lawyer', // or 'lawyer' depending on the user type
             'user-id': user?.walletAddress ?? ''
           },
         })
@@ -55,6 +59,9 @@ export default function DocumentsList() {
     fetchDocuments()
   }, [])
 
+
+
+
   const pendingDocuments = documents.filter((doc: any) => doc.case_status === 'pending-lawyer')
   const signedDocuments = documents.filter((doc: any) => doc.case_status === 'pending-signature')
   const completedDocuments = documents.filter((doc: any) => doc.case_status === 'completed')
@@ -63,49 +70,49 @@ export default function DocumentsList() {
     <div className="container mx-auto p-6">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Legal Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Lawyer Dashboard</h1>
           <p className="text-lg text-muted-foreground">
-            Request documents from lawyers, review your requests, and view documents signed by lawyers.
+            Manage client documents: review, create, and sign with ease.
           </p>
         </div>
-        <DocumentsRequestForm />
       </div>
 
       <Tabs defaultValue="pending" className="w-full">
         <TabsList>
-          <TabsTrigger value="pending">Pending Documents</TabsTrigger>
+          <TabsTrigger value="pending">Pending requests</TabsTrigger>
           <TabsTrigger value="signed">Signed Documents</TabsTrigger>
           <TabsTrigger value="completed">Completed Documents</TabsTrigger>
         </TabsList>
         <TabsContent value="pending" className="mt-6">
 
-          {pendingDocuments && <p className="mb-2">The lawyer is reviewing these documents. You don't need to take any action at this time.</p>}
+          {pendingDocuments.length > 0 && <p className="mb-2">You have documents pending review. Please check them for any necessary actions.</p>}
+          {pendingDocuments.length === 0 && <p className="mb-2">You don't have any requests to review.</p>}
 
           {isLoading ? (
             <div className="text-center p-6">Loading...</div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2">
               {pendingDocuments.map((doc: any, index: number) => (
-                <DocumentCard
+                <LawyerDocumentCard
                   doc={doc}
                   setSelectedDocument={setSelectedDocument}
                   setIsModalOpen={setIsModalOpen}
-                  key={`client-pendingDocuments-${index}`}
+                  key={`lawyer-pendingDocuments-${index}`}
                 />
               ))}
             </div>
           )}
         </TabsContent>
         <TabsContent value="signed" className="mt-6">
-          {signedDocuments && <p className="mb-2">These documents have been signed by the lawyer but are awaiting your signature.</p>}
+          {signedDocuments && <p className="mb-2">You have uploaded and signed the contract. Awaiting the user to sign it.</p>}
           {signedDocuments.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2">
               {signedDocuments.map((doc: any, index: number) => (
-                <DocumentCard
+                <LawyerDocumentCard
                   doc={doc}
                   setSelectedDocument={setSelectedDocument}
                   setIsModalOpen={setIsModalOpen}
-                  key={`client-signedDocuments-${index}`}
+                  key={`lawyer-signedDocuments-${index}`}
                 />
               ))}
             </div>
@@ -118,16 +125,15 @@ export default function DocumentsList() {
         </TabsContent>
 
         <TabsContent value="completed" className="mt-6">
-          {completedDocuments && <p className="mb-2">These documents have been signed by both you and the lawyer. No further action is required.</p>}
-
+          {completedDocuments && <p className="mb-2">These documents have been signed by both you and the client. No further action is required.</p>}
           {completedDocuments.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2">
               {completedDocuments.map((doc: any, index: number) => (
-                <DocumentCard
+                <LawyerDocumentCard
                   doc={doc}
                   setSelectedDocument={setSelectedDocument}
                   setIsModalOpen={setIsModalOpen}
-                  key={`client-completedDocuments-${index}`}
+                  key={`lawyer-completedDocuments-${index}`}
                 />
               ))}
             </div>
@@ -142,7 +148,7 @@ export default function DocumentsList() {
 
       {/* Document Preview Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="h-[90%] max-w-5xl overflow-y-auto">
           {selectedDocument?.case_status === 'pending-lawyer' && <PendingCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} />}
           {selectedDocument?.case_status === 'pending-signature' && <SignedCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} setDocuments={setDocuments} />}
           {selectedDocument?.case_status === 'completed' && <CompletedCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} />}
