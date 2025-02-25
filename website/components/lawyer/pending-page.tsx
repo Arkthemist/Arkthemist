@@ -1,23 +1,43 @@
-import { Button } from "@/components/ui/button"
-import { FileText, UserRound } from "lucide-react"
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-// import { DocumentsRequestForm } from "./document-request-form"
 import { useAuth } from "@/contexts/auth-context"
 import { DocumentUpload } from "../document-upload"
 import { Separator } from "../ui/separator"
 import SignDocument from "@/app/components/SignDocument"
 
-interface PendingCardProps {
-  selectedDocument?: any
+interface PendingPageProps {
+  documentId: string;
   setIsModalOpen?: (isModalOpen: boolean) => void
   setDocuments?: (docs: any) => void
 }
 
-export const PendingCard = ({ selectedDocument, setIsModalOpen, setDocuments }: PendingCardProps) => {
+export const PendingPage = ({ documentId }: PendingPageProps) => {
   const { isLoggedIn, user } = useAuth();
+  const [selectedDocument, setSelectedDocument] = useState<any>(null);
+
+  console.log('documentId', documentId)
+
+  useEffect(() => {
+    const fetchDocument = async () => {
+      if (!documentId) return;
+
+      try {
+        const response = await fetch(`/api/form-by-id?id=${documentId}`);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch document');
+        }
+
+        const documentData = await response.json();
+
+        console.log('documentData', documentData)
+        setSelectedDocument(documentData);
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+
+    fetchDocument();
+  }, [documentId]);
 
   const sendForSignature = async () => {
     if (!selectedDocument) return;
@@ -40,12 +60,7 @@ export const PendingCard = ({ selectedDocument, setIsModalOpen, setDocuments }: 
         throw new Error('Failed to update document status');
       }
 
-      const updatedDocument = await response.json();
-      setDocuments && setDocuments((prevDocs: any) =>
-        prevDocs.map((doc: any) => (doc._id === updatedDocument._id ? updatedDocument : doc))
-      );
-
-      setIsModalOpen && setIsModalOpen(false);
+      // const updatedDocument = await response.json();
     } catch (error) {
       console.error('Error sending for signature:', error);
     }
@@ -55,14 +70,14 @@ export const PendingCard = ({ selectedDocument, setIsModalOpen, setDocuments }: 
 
   return (
     <div className="">
-      <DialogHeader>
-        <DialogTitle>
+      <div>
+        <h1>
           {selectedDocument?.type.replace(/-/g, ' ').replace(/\b\w/g, (char: any) => char.toUpperCase())}
-        </DialogTitle>
-        <DialogDescription>
+        </h1>
+        <p>
           Added on {selectedDocument && new Date(selectedDocument.createdAt).toLocaleDateString()}
-        </DialogDescription>
-      </DialogHeader>
+        </p>
+      </div>
 
       <div className="grid gap-6 mt-2">
         {/* <div className="grid gap-4 md:grid-cols-2">
@@ -137,7 +152,7 @@ export const PendingCard = ({ selectedDocument, setIsModalOpen, setDocuments }: 
           </div>
         </div>
 
-        <DocumentUpload />
+        <DocumentUpload documentId={documentId} />
         <Separator />
         <div className="flex justify-end gap-4">
           {/* <Button variant="outline">Reject Request</Button> */}

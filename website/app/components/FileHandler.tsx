@@ -1,14 +1,43 @@
 'use client';
 
+import { useAuth } from '@/contexts/auth-context';
 import { CldUploadWidget } from 'next-cloudinary';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function FileHandler() {
+interface FileHandlerProps {
+    documentId?: string
+}
+
+export default function FileHandler({ documentId }: FileHandlerProps) {
+    const { isLoggedIn, user } = useAuth();
     const [downloadUrl, setDownloadUrl] = useState<string>('');
-    // const [fileName, setFileName] = useState<string>('');
+    // const [formId, setFormId] = useState<string>('');
+
+    const updateDocumentUrl = async (url: string) => {
+        try {
+            const response = await fetch('/api/forms', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'user-type': 'client',
+                    'user-id': user?.walletAddress ?? ''
+                },
+                body: JSON.stringify({ id: documentId, documentUrl: url }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update document URL');
+            }
+
+            const data = await response.json();
+            console.log('Document URL updated:', data);
+        } catch (error) {
+            console.error('Error updating document URL:', error);
+        }
+    };
 
     return (
-        <div className="flex items-center gap-4">
+        <div className=" items-center gap-4">
             <CldUploadWidget
                 uploadPreset="Arkthemist"
                 options={{
@@ -21,9 +50,8 @@ export default function FileHandler() {
                 onSuccess={(result: any) => {
                     if (result.info) {
                         console.log('Upload result:', result.info);
-                        // Store both URL and filename
                         setDownloadUrl(result.info.secure_url);
-                        // setFileName(result.info.original_filename);
+                        updateDocumentUrl(result.info.secure_url);
                     }
                 }}
                 onError={(error: any) => {
@@ -41,15 +69,12 @@ export default function FileHandler() {
             </CldUploadWidget>
 
             {downloadUrl && (
-                <a
-                    href={downloadUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-full bg-card/50 backdrop-blur-sm border border-border hover:bg-secondary transition-colors"
-                    download={downloadUrl}
-                >
-                    Download
-                </a>
+                <div className="mt-[20px]">
+                    <iframe
+                        src={downloadUrl}
+                        className="w-full h-[500px] rounded-b-lg"
+                    />
+                </div>
             )}
         </div>
     );

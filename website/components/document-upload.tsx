@@ -2,7 +2,11 @@ import { useRef, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import FileHandler from "@/app/components/FileHandler"
 
-export const DocumentUpload = () => {
+interface DocumentUploadProps {
+  documentId?: string
+}
+
+export const DocumentUpload = ({ documentId }: DocumentUploadProps) => {
   const [isDocumentUploaded, setIsDocumentUploaded] = useState(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -56,7 +60,7 @@ export const DocumentUpload = () => {
             onChange={handleFileChange}
           /> */}
 
-          <FileHandler />
+          <FileHandler documentId={documentId} />
         </CardContent>
       </Card>
     </div>

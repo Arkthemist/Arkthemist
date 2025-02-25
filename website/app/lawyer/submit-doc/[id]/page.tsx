@@ -1,0 +1,73 @@
+'use client'
+import { AppSidebar } from "@/components/app-sidebar";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
+import {
+	SidebarInset,
+	SidebarProvider,
+	SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { UnauthorizedState } from "@/components/unauthorized-state";
+import { useAuth } from "@/contexts/auth-context";
+import { AppLawyerSidebar } from "@/components/app-lawyer-sidebar";
+import DocumentsList from "@/components/documents-list";
+import { PendingPage } from "@/components/lawyer/pending-page";
+import { useParams } from "next/navigation";
+
+export default function DashboardPage({  }) {
+	// const { id } = params; // Get the id from the params
+	const params = useParams(); 
+	const { id } = params; 
+	const { isLoggedIn, user } = useAuth();
+
+	if (!id) {
+		return <div>Loading...</div>; // Handle loading state
+	}
+
+	return (
+		<SidebarProvider>
+			{user?.userType === "lawyer" ? (
+				<AppLawyerSidebar />
+			) : (
+				<AppSidebar />
+			)}
+			<SidebarInset>
+				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+					<div className="flex items-center gap-2 px-4">
+						<SidebarTrigger className="-ml-1" />
+						<Separator
+							orientation="vertical"
+							className="mr-2 h-4"
+						/>
+						<Breadcrumb>
+							<BreadcrumbList>
+								<BreadcrumbItem className="hidden md:block">
+									<BreadcrumbLink href="#">
+										{user ? `Welcome, ${user.name}` : 'Dashboard'}
+									</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator className="hidden md:block" />
+								<BreadcrumbItem>
+									<BreadcrumbPage>Cases</BreadcrumbPage>
+								</BreadcrumbItem>
+							</BreadcrumbList>
+						</Breadcrumb>
+					</div>
+				</header>
+				<div>
+					<div className="min-h-screen bg-background p-4 space-y-6">
+						<PendingPage documentId={Array.isArray(id) ? id[0] : id || ""} />
+						
+					</div>
+				</div>
+			</SidebarInset>
+		</SidebarProvider>
+	);
+}

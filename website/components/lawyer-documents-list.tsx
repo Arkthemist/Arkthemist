@@ -15,6 +15,7 @@ import { LawyerDocumentCard } from "./lawyer-document-card"
 import { PendingCard } from "./lawyer/pending-card"
 import { SignedCard } from "./lawyer/signed-card"
 import { CompletedCard } from "./lawyer/completed-card"
+import PayWithStark from "@/app/components/PayWithStark"
 
 interface Document {
   _id: string
@@ -58,9 +59,6 @@ export default function LawyerDocumentsList() {
 
     fetchDocuments()
   }, [])
-
-
-
 
   const pendingDocuments = documents.filter((doc: any) => doc.case_status === 'pending-lawyer')
   const signedDocuments = documents.filter((doc: any) => doc.case_status === 'pending-signature')
@@ -146,10 +144,12 @@ export default function LawyerDocumentsList() {
         </TabsContent>
       </Tabs>
 
+      {/* {selectedDocument?.case_status === 'pending-lawyer' && <PendingCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} setDocuments={setDocuments}  />} */}
+
       {/* Document Preview Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="h-[90%] max-w-5xl overflow-y-auto">
-          {selectedDocument?.case_status === 'pending-lawyer' && <PendingCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} />}
+          {selectedDocument?.case_status === 'pending-lawyer' && <PendingCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} setDocuments={setDocuments}  />}
           {selectedDocument?.case_status === 'pending-signature' && <SignedCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} setDocuments={setDocuments} />}
           {selectedDocument?.case_status === 'completed' && <CompletedCard selectedDocument={selectedDocument} setIsModalOpen={setIsModalOpen} />}
         </DialogContent>
