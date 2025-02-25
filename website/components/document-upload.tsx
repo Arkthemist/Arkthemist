@@ -4,9 +4,10 @@ import FileHandler from "@/app/components/FileHandler"
 
 interface DocumentUploadProps {
   documentId?: string
+  setDocumentUrl?: (documentUrl: string) => void
 }
 
-export const DocumentUpload = ({ documentId }: DocumentUploadProps) => {
+export const DocumentUpload = ({ documentId, setDocumentUrl }: DocumentUploadProps) => {
   const [isDocumentUploaded, setIsDocumentUploaded] = useState(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -60,7 +61,7 @@ export const DocumentUpload = ({ documentId }: DocumentUploadProps) => {
             onChange={handleFileChange}
           /> */}
 
-          <FileHandler documentId={documentId} />
+          <FileHandler documentId={documentId} setDocumentUrl={setDocumentUrl} />
         </CardContent>
       </Card>
     </div>

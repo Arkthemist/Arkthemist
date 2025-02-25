@@ -13,13 +13,17 @@ interface PendingPageProps {
 export const PendingPage = ({ documentId }: PendingPageProps) => {
   const { isLoggedIn, user } = useAuth();
   const [selectedDocument, setSelectedDocument] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [documentUrl, setDocumentUrl] = useState<string>('');
 
+  console.log('selectedDocument', selectedDocument)
   console.log('documentId', documentId)
 
   useEffect(() => {
     const fetchDocument = async () => {
       if (!documentId) return;
 
+      setLoading(true);
       try {
         const response = await fetch(`/api/form-by-id?id=${documentId}`);
 
@@ -33,6 +37,8 @@ export const PendingPage = ({ documentId }: PendingPageProps) => {
         setSelectedDocument(documentData);
       } catch (error) {
         console.error('Error fetching document:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -70,106 +76,118 @@ export const PendingPage = ({ documentId }: PendingPageProps) => {
 
   return (
     <div className="">
-      <div>
-        <h1>
-          {selectedDocument?.type.replace(/-/g, ' ').replace(/\b\w/g, (char: any) => char.toUpperCase())}
-        </h1>
-        <p>
-          Added on {selectedDocument && new Date(selectedDocument.createdAt).toLocaleDateString()}
-        </p>
-      </div>
-
-      <div className="grid gap-6 mt-2">
-        {/* <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <UserRound className="mr-2 h-5 w-5" />
-                Client Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-2">
-              <div>
-                <div className="font-medium">Company</div>
-                <div className="text-sm text-muted-foreground"></div> 
-              </div>
-              <div>
-                <div className="font-medium">Email</div>
-                <div className="text-sm text-muted-foreground"></div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <FileText className="mr-2 h-5 w-5" />
-                Document Details
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-2">
-              <div>
-                <div className="font-medium">Type</div>
-                <div className="text-sm text-muted-foreground"></div>
-              </div>
-              <div>
-                <div className="font-medium">Description</div>
-                <div className="text-sm text-muted-foreground"></div>
-              </div>
-            </CardContent>
-          </Card>
-        </div> */}
-
-        {/* <Card>
-              <CardHeader>
-                <CardTitle>Document Preview</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
-                  <span className="text-muted-foreground">Document preview will be displayed here</span>
-                </div>
-              </CardContent>
-            </Card> */}
-
-        <div className="mt-4">
-          <div className="rounded-lg border bg-muted/40 p-6">
-            <p className="whitespace-pre-wrap font-mono text-sm">
-              {selectedDocument?.documentUrl ? (
-                <iframe
-                  src={selectedDocument.documentUrl}
-                  className="w-full h-[60vh]"
-                  title="Document Preview"
-                />
-              ) : (
-                <div>
-                  {selectedDocument?.input && Object.entries(selectedDocument.input).map(([key, value]) => (
-                    <div key={key}>
-                      <strong>{key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}:</strong> {value?.toString()}
-                    </div>
-                  ))}
-                </div>
-              )}
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div>
+          <div>
+            <h1 className="text-2xl font-bold">
+              {selectedDocument?.type.replace(/-/g, ' ').replace(/\b\w/g, (char: any) => char.toUpperCase())}
+            </h1>
+            <p className="">
+              Added on {selectedDocument && new Date(selectedDocument.createdAt).toLocaleDateString()}
             </p>
           </div>
+
+          <div className="grid gap-6 mt-2">
+            {/* <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <UserRound className="mr-2 h-5 w-5" />
+                    Client Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-2">
+                  <div>
+                    <div className="font-medium">Company</div>
+                    <div className="text-sm text-muted-foreground"></div> 
+                  </div>
+                  <div>
+                    <div className="font-medium">Email</div>
+                    <div className="text-sm text-muted-foreground"></div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <FileText className="mr-2 h-5 w-5" />
+                    Document Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-2">
+                  <div>
+                    <div className="font-medium">Type</div>
+                    <div className="text-sm text-muted-foreground"></div>
+                  </div>
+                  <div>
+                    <div className="font-medium">Description</div>
+                    <div className="text-sm text-muted-foreground"></div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div> */}
+
+            {/* <Card>
+                  <CardHeader>
+                    <CardTitle>Document Preview</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
+                      <span className="text-muted-foreground">Document preview will be displayed here</span>
+                    </div>
+                  </CardContent>
+                </Card> */}
+
+            <div className="mt-4">
+              <div className="rounded-lg border bg-muted/40 p-6">
+                <div className="whitespace-pre-wrap font-mono text-sm">
+                {selectedDocument?.input && Object.entries(selectedDocument.input).map(([key, value]) => (
+                        <div key={key}>
+                          <strong>{key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}:</strong> {value?.toString()}
+                        </div>
+                      ))}
+                  {/* {selectedDocument?.documentUrl ? (
+                    <iframe
+                      src={selectedDocument.documentUrl}
+                      className="w-full h-[60vh]"
+                      title="Document Preview"
+                    />
+                  ) : (
+                    <div>
+                      {selectedDocument?.input && Object.entries(selectedDocument.input).map(([key, value]) => (
+                        <div key={key}>
+                          <strong>{key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}:</strong> {value?.toString()}
+                        </div>
+                      ))}
+                    </div>
+                  )} */}
+                </div>
+              </div>
+            </div>
+
+            <DocumentUpload documentId={documentId} setDocumentUrl={setDocumentUrl} />
+            <Separator />
+            <div className="flex justify-end gap-4">
+              {/* <Button variant="outline">Reject Request</Button> */}
+              {/* <Button onClick={() => sendForSignature()}>Complete & Send for Signature</Button> */}
+
+              <SignDocument
+                documentUrl={documentUrl}
+                onClick={() => sendForSignature()}
+              />
+            </div>
+          </div>
+
+          {/* <div className="mt-6 flex justify-end gap-4">
+            <Button variant="outline" onClick={() => { setIsModalOpen && setIsModalOpen(false) }}>
+              Close
+            </Button>
+          </div> */}
+
         </div>
-
-        <DocumentUpload documentId={documentId} />
-        <Separator />
-        <div className="flex justify-end gap-4">
-          {/* <Button variant="outline">Reject Request</Button> */}
-          {/* <Button onClick={() => sendForSignature()}>Complete & Send for Signature</Button> */}
-
-          <SignDocument
-            onClick={() => sendForSignature()}
-          />
-        </div>
-      </div>
-
-      {/* <div className="mt-6 flex justify-end gap-4">
-        <Button variant="outline" onClick={() => { setIsModalOpen && setIsModalOpen(false) }}>
-          Close
-        </Button>
-      </div> */}
-
+      )}
     </div>
   )
 }

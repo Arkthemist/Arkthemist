@@ -144,6 +144,7 @@ export const PendingCard = ({ selectedDocument, setIsModalOpen, setDocuments }: 
           {/* <Button onClick={() => sendForSignature()}>Complete & Send for Signature</Button> */}
 
           <SignDocument
+            documentUrl={selectedDocument?.documentUrl}
             onClick={() => sendForSignature()}
           />
         </div>

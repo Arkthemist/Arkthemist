@@ -11,6 +11,8 @@ interface SignedCardProps {
 export const SignedCard = ({ selectedDocument, setIsModalOpen, setDocuments }: SignedCardProps) => {
   const { isLoggedIn, user } = useAuth();
 
+  console.log('selectedDocument', selectedDocument)
+
   const approveAndSignDocument = async () => {
     if (!selectedDocument) return;
 
@@ -35,7 +37,7 @@ export const SignedCard = ({ selectedDocument, setIsModalOpen, setDocuments }: S
       const updatedDocument: any = await response.json();
 
       console.log('updatedDocument', updatedDocument);
-      
+
       if (setDocuments) {
         setDocuments((prevDocs: any) =>
           prevDocs.map((doc: any) => (doc._id === updatedDocument._id ? updatedDocument : doc))
@@ -76,7 +78,7 @@ export const SignedCard = ({ selectedDocument, setIsModalOpen, setDocuments }: S
 
       <div className="mt-[20px]">
         <iframe
-          src={"https://firebasestorage.googleapis.com/v0/b/checkmyticket-20.appspot.com/o/MUTUAL%20CONFIDENTIALITY%20%26%20NON-DISCLOSURE%20AGREEMENT.pdf?alt=media&token=976e3918-5764-4250-b7ac-4d4c868c9110"}
+          src={selectedDocument?.documentUrl}
           className="w-full h-[650px] rounded-b-lg"
         />
       </div>

@@ -6,12 +6,13 @@ import { Button } from '@/components/ui/button';
 
 interface SignDocumentProps {
     onClick?: () => void;
+    documentUrl?: string
 }
 
-export default function SignDocument({ onClick }: SignDocumentProps) {
+export default function SignDocument({ onClick, documentUrl }: SignDocumentProps) {
     const { account, wallet } = useAuth();
     const handleOnClick = async () => {
-        let documentUrl = 'https://res.cloudinary.com/dyurooq5e/raw/upload/v1740360418/Jonatan-chaverri_r7bmw0.pdf';
+        //let documentUrl = 'https://res.cloudinary.com/dyurooq5e/raw/upload/v1740360418/Jonatan-chaverri_r7bmw0.pdf';
         const result = await signDocument(documentUrl, account, wallet);
         console.log('Document signed successfully:', result);
         if (result) {

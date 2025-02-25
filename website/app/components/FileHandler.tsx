@@ -6,9 +6,10 @@ import { useState, useEffect } from 'react';
 
 interface FileHandlerProps {
     documentId?: string
+    setDocumentUrl?: (documentUrl: string) => void
 }
 
-export default function FileHandler({ documentId }: FileHandlerProps) {
+export default function FileHandler({ documentId, setDocumentUrl }: FileHandlerProps) {
     const { isLoggedIn, user } = useAuth();
     const [downloadUrl, setDownloadUrl] = useState<string>('');
     // const [formId, setFormId] = useState<string>('');
@@ -51,6 +52,7 @@ export default function FileHandler({ documentId }: FileHandlerProps) {
                     if (result.info) {
                         console.log('Upload result:', result.info);
                         setDownloadUrl(result.info.secure_url);
+                        setDocumentUrl && setDocumentUrl(result.info.secure_url)
                         updateDocumentUrl(result.info.secure_url);
                     }
                 }}
