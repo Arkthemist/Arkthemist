@@ -12,6 +12,7 @@ import { DocumentCard } from "./document-card"
 import { PendingCard } from "./client/pending-card"
 import { SignedCard } from "./client/signed-card"
 import { CompletedCard } from "./client/completed-card"
+import PayWithStark from "@/app/components/PayWithStark"
 
 interface Document {
   _id: string
@@ -68,7 +69,7 @@ export default function DocumentsList() {
             Request documents from lawyers, review your requests, and view documents signed by lawyers.
           </p>
         </div>
-        <DocumentsRequestForm />
+        <DocumentsRequestForm setDocuments={setDocuments} />
       </div>
 
       <Tabs defaultValue="pending" className="w-full">

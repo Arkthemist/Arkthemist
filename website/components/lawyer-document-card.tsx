@@ -30,6 +30,8 @@ export const LawyerDocumentCard = ({ doc, setSelectedDocument, setIsModalOpen }:
     return type.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())
   }
 
+  console.log('doc', doc)
+
   return (
     <Card key={doc._id}>
       <CardHeader className="pb-3">
@@ -73,8 +75,12 @@ export const LawyerDocumentCard = ({ doc, setSelectedDocument, setIsModalOpen }:
         <Button
           className="w-full"
           onClick={() => {
-            setSelectedDocument && setSelectedDocument(doc)
-            setIsModalOpen && setIsModalOpen(true)
+            if (doc?.case_status === 'pending-lawyer') {
+              window.location.href = `/lawyer/submit-doc/${doc?._id}`;
+            } else {
+              setSelectedDocument && setSelectedDocument(doc);
+              setIsModalOpen && setIsModalOpen(true);
+            }
           }}
         >
           {doc.case_status === 'pending-signature' ? 'View' : 

@@ -77,7 +77,7 @@ export const SignedCard = ({ selectedDocument, setIsModalOpen, setDocuments }: S
 
       <div className="mt-[20px]">
         <iframe
-          src={"https://firebasestorage.googleapis.com/v0/b/checkmyticket-20.appspot.com/o/MUTUAL%20CONFIDENTIALITY%20%26%20NON-DISCLOSURE%20AGREEMENT.pdf?alt=media&token=976e3918-5764-4250-b7ac-4d4c868c9110"}
+          src={selectedDocument?.documentUrl}
           className="w-full h-[500px] rounded-b-lg"
         />
       </div>
@@ -95,6 +95,7 @@ export const SignedCard = ({ selectedDocument, setIsModalOpen, setDocuments }: S
           Approve document and Sign
         </Button> */}
         <SignDocument
+          documentUrl={selectedDocument?.documentUrl}
           onClick={() => {
             approveAndSignDocument()
             setIsModalOpen && setIsModalOpen(false)

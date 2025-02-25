@@ -140,21 +140,21 @@ export const PendingCard = ({ selectedDocument, setIsModalOpen, setDocuments }: 
         <DocumentUpload />
         <Separator />
         <div className="flex justify-end gap-4">
-          <Button variant="outline">Reject Request</Button>
+          {/* <Button variant="outline">Reject Request</Button> */}
           {/* <Button onClick={() => sendForSignature()}>Complete & Send for Signature</Button> */}
 
           <SignDocument
+            documentUrl={selectedDocument?.documentUrl}
             onClick={() => sendForSignature()}
           />
         </div>
       </div>
 
-
-      <div className="mt-6 flex justify-end gap-4">
+      {/* <div className="mt-6 flex justify-end gap-4">
         <Button variant="outline" onClick={() => { setIsModalOpen && setIsModalOpen(false) }}>
           Close
         </Button>
-      </div>
+      </div> */}
 
     </div>
   )

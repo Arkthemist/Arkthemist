@@ -3,6 +3,9 @@
 import { User, UserType } from '@/types/user'
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { connect, disconnect } from "starknetkit";
+import { provider } from '@/utils/constants';
+// import { provider } from "../../utils/constants";
 
 interface AuthContextType {
   isLoggedIn: boolean
@@ -34,13 +37,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userData = JSON.parse(storedUser)
       setUser(userData)
       setIsLoggedIn(true)
+
+      connectWalletTrigger()
     }
   }, [])
+
+
+  const connectWalletTrigger = async () => {
+    if (!account) {
+
+      const result = await connect({
+        modalMode: "alwaysAsk",
+        modalTheme: "light",
+        dappName: "StarknetKit",
+        resultType: "wallet",
+      });
+      if (result.wallet && result.connectorData) {
+        const address = result.connectorData.account;
+        // setWalletConnection({
+        //   wallet: result.wallet,
+        //   address: address,
+        // });
+        // localStorage.setItem("walletAddress", address || '');
+        console.log("Wallet connected:", result, "Address:", address);
+
+        // login({
+        //   walletAddress: address
+        // })
+
+        if (address) {
+          loginWithWallet(address)
+        }
+
+        let account = await result.connector?.account(provider);
+        setAccount(account);
+        setWallet(result.wallet);
+
+
+        // if (true) {
+        //   router.push(`/signup?address=${address}`)
+        // } else {
+        //   router.push("/dashboard")
+        // }
+
+      } else {
+        console.error("No wallet found in connection result.");
+      }
+    }
+  }
 
   const fetchUserByWallet = async (walletAddress: string) => {
     try {
       const response = await fetch(`/api/users/wallet/${walletAddress}`);
-      
+
       if (response.status === 404) {
         // User not found - redirect to signup
         router.push(`/signup?address=${walletAddress}`);
@@ -62,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // User exists and has userType - proceed with login
       login(userData);
-      router.push('/dashboard');
+      //router.push('/dashboard');
     } catch (error) {
       console.error('Error fetching user:', error);
     }
@@ -86,7 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Set minimal user data in state
       setUser({ walletAddress } as User);
       setIsLoggedIn(true);
-      
+
       // Then fetch complete user data and handle routing
       await fetchUserByWallet(walletAddress);
     } catch (error) {
@@ -131,16 +180,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // }, [])
 
   return (
-    <AuthContext.Provider 
-      value={{ 
-        isLoggedIn, 
-        user, 
-        setIsLoggedIn, 
-        login, 
-        logout, 
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        user,
+        setIsLoggedIn,
+        login,
+        logout,
         updateUser,
-        loginWithWallet, 
-        setAccount, 
+        loginWithWallet,
+        setAccount,
         setWallet,
         account,
         wallet
@@ -165,7 +214,7 @@ export const mockUsers = {
     id: '1',
     name: 'John Doe',
     userType: 'lawyer' as UserType,
-    email: 'john@example.com', 
+    email: 'john@example.com',
     walletAddress: '0x12312312321'
   },
   client: {

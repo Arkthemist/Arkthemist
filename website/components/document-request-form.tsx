@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import DynamicFormField from "./dynamic-form-field"
 import { generateSchema, servicesContractFields, powerOfAttorneyFields, nonDisclosureAgreementFields } from "@/utils/documentsFields"
@@ -17,6 +16,7 @@ import { Form } from "@/components/ui/form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useAuth } from "@/contexts/auth-context"
+import PayWithStark from "@/app/components/PayWithStark"
 
 interface DocumentTemplate {
   id: string
@@ -70,12 +70,17 @@ const lawyersList: any[] = [
   },
 ]
 
-export const DocumentsRequestForm = () => {
-  const { login, logout, loginWithWallet, user } = useAuth()
+interface DocumentRequestFormProps {
+  setDocuments?: (docs: any) => void;
+}
+
+export const DocumentsRequestForm = ({ setDocuments }: DocumentRequestFormProps) => {
+  const { user } = useAuth()
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState<string>("")
   const [selectedLawyer, setSelectedLawyer] = useState<string>("")
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [documentPrice, setDocumentPrice] = useState("")
 
   // Determine the schema and fields based on the selected template
   let personalInfoFormSchemaCustom;
@@ -148,17 +153,25 @@ export const DocumentsRequestForm = () => {
 
       const data = await response.json();
       console.log('Success:', data);
-      
+
+      // Update documents list
+      if (setDocuments) {
+        setDocuments((prevDocs: any) => [...prevDocs, data]);
+      }
+
       // Close the modal and reset form
       setIsRequestModalOpen(false);
       reset();
-      
+
     } catch (error) {
       console.error('Error submitting form:', error);
       // You might want to show an error message to the user here
     } finally {
       setIsSubmitting(false);
     }
+  }
+  const handleButtonClick = () => {
+    handleSubmit(onSubmit)(); // Call handleSubmit with onSubmit
   }
 
   return (
@@ -208,7 +221,19 @@ export const DocumentsRequestForm = () => {
                         </Card>
                       )}
 
-                      <Select value={selectedLawyer} onValueChange={setSelectedLawyer}>
+                      <Select
+                        value={selectedLawyer}
+                        onValueChange={(value) => {
+                          setSelectedLawyer(value);
+
+                          console.log('value', value)
+                          const selectedLawyerData = lawyersList.find((l) => l.id === value);
+
+                          console.log('selectedLawyerData', selectedLawyerData)
+                          const price = selectedLawyerData?.price || '0';
+                          const numericPrice = parseInt(price.replace(/[^0-9]/g, ''));
+                          setDocumentPrice(numericPrice.toString());
+                        }}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select lawyer" />
                         </SelectTrigger>
@@ -258,13 +283,24 @@ export const DocumentsRequestForm = () => {
                       </div>
                     </div>
                   </div>
+
                   <div className="mt-6 flex justify-end gap-4">
                     <Button variant="outline" onClick={() => setIsRequestModalOpen(false)}>
                       Cancel
                     </Button>
-                    <Button type="submit" disabled={isSubmitting}>
+                    {/* <Button type="submit" disabled={isSubmitting}>
                       {isSubmitting ? 'Submitting...' : 'Submit Request'}
                     </Button>
+
+                    <Button onClick={handleButtonClick} disabled={isSubmitting}>
+                      SUBMIT
+                    </Button> */}
+
+                    <PayWithStark
+                      onClick={handleButtonClick}
+                      disabled={isSubmitting}
+                      text={isSubmitting ? 'Submitting...' : `Pay ($${documentPrice}) and Send Request`}
+                    />
                   </div>
                 </div>
               </form>

@@ -1,0 +1,193 @@
+import { useState, useEffect } from "react"
+import { useAuth } from "@/contexts/auth-context"
+import { DocumentUpload } from "../document-upload"
+import { Separator } from "../ui/separator"
+import SignDocument from "@/app/components/SignDocument"
+
+interface PendingPageProps {
+  documentId: string;
+  setIsModalOpen?: (isModalOpen: boolean) => void
+  setDocuments?: (docs: any) => void
+}
+
+export const PendingPage = ({ documentId }: PendingPageProps) => {
+  const { isLoggedIn, user } = useAuth();
+  const [selectedDocument, setSelectedDocument] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [documentUrl, setDocumentUrl] = useState<string>('');
+
+  console.log('selectedDocument', selectedDocument)
+  console.log('documentId', documentId)
+
+  useEffect(() => {
+    const fetchDocument = async () => {
+      if (!documentId) return;
+
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/form-by-id?id=${documentId}`);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch document');
+        }
+
+        const documentData = await response.json();
+
+        console.log('documentData', documentData)
+        setSelectedDocument(documentData);
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDocument();
+  }, [documentId]);
+
+  const sendForSignature = async () => {
+    if (!selectedDocument) return;
+
+    try {
+      const response = await fetch('/api/forms', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'user-type': 'lawyer',
+          'user-id': user?.walletAddress ?? '',
+        },
+        body: JSON.stringify({
+          id: selectedDocument._id ?? '',
+          case_status: 'pending-signature',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update document status');
+      }
+
+      // const updatedDocument = await response.json();
+    } catch (error) {
+      console.error('Error sending for signature:', error);
+    }
+  }
+
+  console.log('selectedDocument', selectedDocument)
+
+  return (
+    <div className="">
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div>
+          <div>
+            <h1 className="text-2xl font-bold">
+              {selectedDocument?.type.replace(/-/g, ' ').replace(/\b\w/g, (char: any) => char.toUpperCase())}
+            </h1>
+            <p className="">
+              Added on {selectedDocument && new Date(selectedDocument.createdAt).toLocaleDateString()}
+            </p>
+          </div>
+
+          <div className="grid gap-6 mt-2">
+            {/* <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <UserRound className="mr-2 h-5 w-5" />
+                    Client Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-2">
+                  <div>
+                    <div className="font-medium">Company</div>
+                    <div className="text-sm text-muted-foreground"></div> 
+                  </div>
+                  <div>
+                    <div className="font-medium">Email</div>
+                    <div className="text-sm text-muted-foreground"></div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <FileText className="mr-2 h-5 w-5" />
+                    Document Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-2">
+                  <div>
+                    <div className="font-medium">Type</div>
+                    <div className="text-sm text-muted-foreground"></div>
+                  </div>
+                  <div>
+                    <div className="font-medium">Description</div>
+                    <div className="text-sm text-muted-foreground"></div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div> */}
+
+            {/* <Card>
+                  <CardHeader>
+                    <CardTitle>Document Preview</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
+                      <span className="text-muted-foreground">Document preview will be displayed here</span>
+                    </div>
+                  </CardContent>
+                </Card> */}
+
+            <div className="mt-4">
+              <div className="rounded-lg border bg-muted/40 p-6">
+                <div className="whitespace-pre-wrap font-mono text-sm">
+                {selectedDocument?.input && Object.entries(selectedDocument.input).map(([key, value]) => (
+                        <div key={key}>
+                          <strong>{key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}:</strong> {value?.toString()}
+                        </div>
+                      ))}
+                  {/* {selectedDocument?.documentUrl ? (
+                    <iframe
+                      src={selectedDocument.documentUrl}
+                      className="w-full h-[60vh]"
+                      title="Document Preview"
+                    />
+                  ) : (
+                    <div>
+                      {selectedDocument?.input && Object.entries(selectedDocument.input).map(([key, value]) => (
+                        <div key={key}>
+                          <strong>{key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}:</strong> {value?.toString()}
+                        </div>
+                      ))}
+                    </div>
+                  )} */}
+                </div>
+              </div>
+            </div>
+
+            <DocumentUpload documentId={documentId} setDocumentUrl={setDocumentUrl} />
+            <Separator />
+            <div className="flex justify-end gap-4">
+              {/* <Button variant="outline">Reject Request</Button> */}
+              {/* <Button onClick={() => sendForSignature()}>Complete & Send for Signature</Button> */}
+
+              <SignDocument
+                documentUrl={documentUrl}
+                onClick={() => sendForSignature()}
+              />
+            </div>
+          </div>
+
+          {/* <div className="mt-6 flex justify-end gap-4">
+            <Button variant="outline" onClick={() => { setIsModalOpen && setIsModalOpen(false) }}>
+              Close
+            </Button>
+          </div> */}
+
+        </div>
+      )}
+    </div>
+  )
+}
