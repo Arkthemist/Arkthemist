@@ -1,25 +1,25 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { address: string } }
+  request: NextRequest,
+  context: any
 ) {
   try {
     await dbConnect();
-    
-    const walletAddress = params.address;
-    
-    const user = await User.findOne({ walletAddress: walletAddress });
-    
+
+    const { address } = context.params; // Properly access params
+
+    const user = await User.findOne({ walletAddress: address });
+
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json(user);
   } catch (error) {
     console.error('Error fetching user:', error);
@@ -28,4 +28,4 @@ export async function GET(
       { status: 500 }
     );
   }
-} 
+}

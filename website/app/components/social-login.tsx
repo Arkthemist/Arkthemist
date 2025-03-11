@@ -56,7 +56,7 @@ export default function SocialLogin({ simpleStyle = false }: SocialLoginProps) {
           loginWithWallet(address)
         }
 
-        let account = await result.connector?.account(provider);
+        const account = await result.connector?.account(provider);
         setAccount(account);
         setWallet(result.wallet);
         

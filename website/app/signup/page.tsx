@@ -45,11 +45,11 @@ import { useAuth } from "@/contexts/auth-context";
 import { useEffect, useState } from "react";
 import { SignUpForm } from "@/components/sign-up-form"
 
-export default function DashboardPage({
-	searchParams,
-}: {
-	searchParams: { address: string }
-}) {
+export default function DashboardPage({ searchParams }: any) {
+
+	// {
+	// 	searchParams: { address: string }
+	// }
 
 	const { isLoggedIn, user } = useAuth();
 	const [cases, setCases] = useState([]);
