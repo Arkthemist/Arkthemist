@@ -84,7 +84,7 @@ export default function LawyerDocumentsList() {
         <TabsContent value="pending" className="mt-6">
 
           {pendingDocuments.length > 0 && <p className="mb-2">You have documents pending review. Please check them for any necessary actions.</p>}
-          {pendingDocuments.length === 0 && <p className="mb-2">You don't have any requests to review.</p>}
+          {pendingDocuments.length === 0 && <p className="mb-2">You don&apos;t have any requests to review.</p>}
 
           {isLoading ? (
             <div className="text-center p-6">Loading...</div>

@@ -80,7 +80,7 @@ export default function DocumentsList() {
         </TabsList>
         <TabsContent value="pending" className="mt-6">
 
-          {pendingDocuments && <p className="mb-2">The lawyer is reviewing these documents. You don't need to take any action at this time.</p>}
+          {pendingDocuments && <p className="mb-2">The lawyer is reviewing these documents. You don&apos;t need to take any action at this time.</p>}
 
           {isLoading ? (
             <div className="text-center p-6">Loading...</div>
